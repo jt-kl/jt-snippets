@@ -12,6 +12,11 @@ def export_datetime(
         _datetime: Object to be formatted
         format: Output format
     """
+    assert _format.lower() in [
+        "iso8601",
+        "rfc3339",
+    ], f"Invalid date/time format specified"
+
     if _format.lower() == "iso8601":
         return _datetime.isoformat("T")
 
