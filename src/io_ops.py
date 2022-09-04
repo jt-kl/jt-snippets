@@ -27,14 +27,19 @@ def delete_directory(
         directory: Directory path to be deleted
         recursive: Recursively deletes child directories
     """
-    if directory.exists():
-        for item in directory.iterdir():
-            if item and item.is_dir():
-                delete_directory(item, recursive)
-            else:
-                item.unlink(missing_ok=True)
+    assert directory.exists(), f"Invalid directory path"
+    assert directory.is_dir(), f"Invalid directory path"
 
-    return
+    if not recursive:
+        directory.unlink()
+
+        return
+
+    for item in directory.iterdir():
+        if item and item.is_dir():
+            delete_directory(item, recursive)
+        else:
+            item.unlink(missing_ok=True)
 
 
 def list_directory(
@@ -48,7 +53,8 @@ def list_directory(
         directory: Directory path to be iterated
         is_file: Return files, directories or both in results
     """
-    assert directory.exists(), f"Directory doesn't exist"
+    assert directory.exists(), f"Invalid directory path"
+    assert directory.is_dir(), f"Invalid directory path"
 
     for item in directory.iterdir():
         if is_file is not None:
@@ -96,7 +102,8 @@ def generate_file_hash(
         source: Source file path to generate hash
         algorithM: Hashing algorithm to use. Example: "md5", "sha256"
     """
-    assert source.is_file()
+    assert source.is_file(), f"Invalid source path"
+    assert algorithm in ["md5", "sha256"], f"Unsupported hash algorithm"
 
     hasher = hashlib.new(algorithm)
 
