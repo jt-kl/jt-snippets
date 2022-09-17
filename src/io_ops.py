@@ -76,7 +76,7 @@ def validate_file_size(
     """
     validate_is_file(path)
 
-    if not lower_bound >= upper_bound:
+    if lower_bound >= upper_bound:
         raise Exception(
             f"Value of lower bound range cannot be greater "
             f"than or equal to value of upper bound range"
@@ -149,7 +149,7 @@ def list_directory(
         is_file: Return files, directories or both in results
     """
     validate_path_exists(path)
-    validate_is_file(path)
+    validate_is_directory(path)
 
     for item in path.iterdir():
         if is_file is not None:
@@ -172,7 +172,7 @@ def generate_file_hash(
         path: Source file path to generate hash
         algorithM: Hashing algorithm to use. Example: "md5", "sha256"
     """
-    validate_is_directory(path)
+    validate_is_file(path)
 
     if algorithm not in ["md5", "sha256"]:
         raise Exception(f"Unsupported hash algorithm")
