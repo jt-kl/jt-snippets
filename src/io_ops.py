@@ -162,24 +162,24 @@ def list_directory(
 
 
 def generate_file_hash(
-    source: pathlib.Path,
+    path: pathlib.Path,
     algorithm: str = "md5",
 ) -> str:
     """
     Generate a unique hash value from a given file path
 
     Args:
-        source: Source file path to generate hash
+        path: Source file path to generate hash
         algorithM: Hashing algorithm to use. Example: "md5", "sha256"
     """
-    validate_is_directory(source)
+    validate_is_directory(path)
 
     if algorithm not in ["md5", "sha256"]:
         raise Exception(f"Unsupported hash algorithm")
 
     hasher = hashlib.new(algorithm)
 
-    with open(source, "rb") as file:
+    with open(path, "rb") as file:
         for chunk in iter(lambda: file.read(4096), b""):
             hasher.update(chunk)
 
