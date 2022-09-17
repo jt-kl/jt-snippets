@@ -17,9 +17,3 @@ def validate_count_range(
     )
 
     return lower_bound < _value < upper_bound
-
-
-if __name__ == "__main__":
-    result = validate_count_range(1, 21, 20)
-
-    print("Completed")
