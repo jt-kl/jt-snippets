@@ -66,26 +66,26 @@ def _childrens():
 # endregion: Mocked resources
 
 # region: PyTest parametrized variables
-create_directories_happy = [(dict(directories=mock_directories(3)))]
+create_directories_happy = [(dict(paths=mock_directories(3)))]
 
 delete_directory_happy = [
-    (dict(directory=mock_directory(), recursive=True)),
-    (dict(directory=mock_directory(), recursive=False)),
-    (dict(directory=mock_directory())),
+    (dict(path=mock_directory(), recursive=True)),
+    (dict(path=mock_directory(), recursive=False)),
+    (dict(path=mock_directory())),
 ]
 delete_directory_sad = [
     (
-        dict(directory=mock_directory(False), recursive=True),
+        dict(path=mock_directory(False), recursive=True),
         dict(
-            exception_type=AssertionError,
-            exception_message=f"Invalid directory path",
+            exception_type=Exception,
+            exception_message=(f"Path doesn't exists."),
         ),
     ),
     (
-        dict(directory=mock_file(True), recursive=True),
+        dict(path=mock_file(True), recursive=True),
         dict(
-            exception_type=AssertionError,
-            exception_message=f"Invalid directory path",
+            exception_type=Exception,
+            exception_message=(f"Path is not a directory"),
         ),
     ),
 ]
@@ -93,41 +93,51 @@ delete_directory_sad = [
 list_directory_happy = [
     (
         dict(
-            directory=mock_directory(childrens=_childrens()),
+            path=mock_directory(childrens=_childrens()),
             is_file=True,
         )
     ),
     (
         dict(
-            directory=mock_directory(childrens=_childrens()),
+            path=mock_directory(childrens=_childrens()),
             is_file=False,
         )
     ),
     (
         dict(
-            directory=mock_directory(childrens=_childrens()),
+            path=mock_directory(childrens=_childrens()),
         )
     ),
 ]
 list_directory_sad = [
     (
         dict(
-            directory=mock_directory(False),
-            is_file=True,
+            path=mock_directory(False),
+            is_file=False,
         ),
         dict(
-            exception_type=AssertionError,
-            exception_message=f"Invalid directory path",
+            exception_type=Exception,
+            exception_message=(f"Path doesn't exists."),
         ),
     ),
     (
         dict(
-            directory=mock_file(True),
+            path=mock_file(True),
             is_file=True,
         ),
         dict(
-            exception_type=AssertionError,
-            exception_message=f"Invalid directory path",
+            exception_type=Exception,
+            exception_message=(f"Path is not a directory."),
+        ),
+    ),
+    (
+        dict(
+            path=mock_file(True),
+            is_file=True,
+        ),
+        dict(
+            exception_type=Exception,
+            exception_message=(f"Path is not a directory."),
         ),
     ),
 ]
@@ -135,7 +145,7 @@ list_directory_sad = [
 validate_file_size_happy = [
     (
         dict(
-            source=mock_file(),
+            path=mock_file(),
             lower_bound=512,
             upper_bound=2048,
         ),
@@ -143,7 +153,7 @@ validate_file_size_happy = [
     ),
     (
         dict(
-            source=mock_file(),
+            path=mock_file(),
             lower_bound=2048,
             upper_bound=4096,
         ),
@@ -153,12 +163,12 @@ validate_file_size_happy = [
 validate_file_size_sad = [
     (
         dict(
-            source=mock_file(),
+            path=mock_file(),
             lower_bound=4096,
             upper_bound=256,
         ),
         dict(
-            exception_type=AssertionError,
+            exception_type=Exception,
             exception_message=(
                 f"Value of lower bound range cannot be greater "
                 f"than or equal to value of upper bound range"
@@ -167,16 +177,13 @@ validate_file_size_sad = [
     ),
     (
         dict(
-            source=mock_directory(),
+            path=mock_directory(),
             lower_bound=128,
             upper_bound=256,
         ),
         dict(
-            exception_type=AssertionError,
-            exception_message=(
-                f"Source path is referring to a directory, please "
-                f"provide a source path that leads to a file"
-            ),
+            exception_type=Exception,
+            exception_message=(f"Path is not a file."),
         ),
     ),
 ]
@@ -184,7 +191,7 @@ validate_file_size_sad = [
 generate_file_hash_happy = [
     (
         dict(
-            source=mock_file(),
+            path=mock_file(),
             algorithm="md5",
             text="J92mcMpESqWbiP$F",
         ),
@@ -192,7 +199,7 @@ generate_file_hash_happy = [
     ),
     (
         dict(
-            source=mock_file(),
+            path=mock_file(),
             algorithm="sha256",
             text="5dTsbUXM9KpvY~$^",
         ),
@@ -202,26 +209,26 @@ generate_file_hash_happy = [
 generate_file_hash_sad = [
     (
         dict(
-            source=mock_file(),
+            path=mock_file(),
             algorithm="sha512",
             text="mu5q3$5HE#h#qmQj",
         ),
         dict(
             result="da2794cc681ad27d7325045c0a48941d36fe0bd94d8d6747404d4990d5c9d96d045e16dc253a1496be375781c858b0f051c78b931880d4ae4084eb8bfeecd9ac",
-            exception_type=AssertionError,
+            exception_type=Exception,
             exception_message=f"Unsupported hash algorithm",
         ),
     ),
     (
         dict(
-            source=mock_directory(),
+            path=mock_directory(),
             algorithm="sha256",
             text="@zn@Fo`V2CVT%K3S",
         ),
         dict(
             result="ceb9fb9796b0d7c7bb822039a312cd0ebdefbf53ab12097f77a16000adb4d0a5",
-            exception_type=AssertionError,
-            exception_message=f"Invalid source path",
+            exception_type=Exception,
+            exception_message=(f"Path is not a file."),
         ),
     ),
 ]
@@ -230,7 +237,7 @@ validate_file_hash_happy = [
     (
         dict(
             _hash="d67d458aa1460d49f3ea15f0c5574234acdbdbaae774dceda8d0dd8602becc61",
-            source=mock_file(),
+            path=mock_file(),
             algorithm="sha256",
             text="h@7szVAUpf9^b@ES",
         ),
@@ -239,7 +246,7 @@ validate_file_hash_happy = [
     (
         dict(
             _hash="cb5e8b5409fb353fde644017fd694959",
-            source=mock_file(),
+            path=mock_file(),
             algorithm="md5",
             text="S9ftQaVPjTz&7YN5",
         ),
@@ -250,7 +257,7 @@ validate_file_hash_happy = [
     (
         dict(
             _hash="ceac42abcd46db4aee968d74427c3d69e27cb879e5f1351d5df7c49342a4a02c",
-            source=mock_file(),
+            path=mock_file(),
             algorithm="sha256",
             text="x&DhYR~3u4d`vnLK",
         ),
@@ -267,19 +274,19 @@ class TestIOOps:
     def test_happy_create_directories(self, payload):
         create_directories(**payload)
 
-        [directory.mkdir.assert_called() for directory in payload["directories"]]
+        [directory.mkdir.assert_called() for directory in payload["paths"]]
 
     @pytest.mark.parametrize("payload", delete_directory_happy)
     def test_happy_delete_directory(self, payload):
         delete_directory(**payload)
 
-        payload["directory"].exists.assert_called_once()
-        payload["directory"].is_dir.assert_called_once()
+        payload["path"].exists.assert_called_once()
+        payload["path"].is_dir.assert_called_once()
 
         if payload.get("recursive") == True:
-            payload["directory"].iterdir.assert_called_once()
+            payload["path"].iterdir.assert_called_once()
         else:
-            payload["directory"].unlink.assert_called()
+            payload["path"].rmdir.assert_called()
 
     @pytest.mark.parametrize("payload, expect", delete_directory_sad)
     def test_sad_delete_directory(self, payload, expect):
