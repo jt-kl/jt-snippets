@@ -2,6 +2,7 @@ import csv
 import pathlib
 import shutil
 import tempfile
+import typing
 
 BASE_DIRECTORY = pathlib.Path(__file__).parent
 SOURCE_FILE = BASE_DIRECTORY.joinpath("test.csv")
@@ -64,5 +65,52 @@ def update_csv_file(
         shutil.copy(pathlib.Path(TEMP_FILE.name), DESTINATION_DIRECTORY)
 
 
-if __name__ == "__main__":
-    update_csv_file(SOURCE_FILE, FIELDS, True)
+def read_csv_file(
+    path: pathlib.Path,
+    header: bool = False,
+    delimiter: str = ",",
+    **kwargs,
+) -> typing.Iterator:
+    """Read CSV file.
+
+    Args:
+        path: Path to CSV file
+        header: Skip header row
+        delimiter: Record delimiter
+    """
+    with open(path, "r") as file:
+        reader = csv.DictReader(file, delimiter=delimiter, **kwargs)
+
+        if not header:
+            yield from reader
+
+        # Skips the CSV header row
+        next(reader)
+
+        yield from reader
+
+
+def write_csv_file(
+    path: pathlib.Path,
+    field_names: list,
+    rows: typing.Union[list[dict], typing.Iterator[dict]],
+    header: bool = True,
+    **kwargs,
+):
+    """
+    Write CSV file.
+
+    Args:
+        path: Path to CSV file
+        field_names: Field names
+        rows: Rows of data to be written
+        header: Write header row
+    """
+    with open(path, "w") as file:
+        writer = csv.DictWriter(file, fieldnames=field_names, **kwargs)
+
+        if header:
+            writer.writeheader()
+
+        for row in rows:
+            writer.writerow(row)
