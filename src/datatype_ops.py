@@ -72,7 +72,9 @@ def to_decimal(
         value = str(value)
 
     # Sanitize separator values from prettified value
-    # Example: 3,948,157.00 / 4,000.61
+    # Examples:
+    #   3,948,157.00 to 3948157.00
+    #   4,000.61 to 4000.61
     for character, replacement in [(",", "")]:
         value = value.replace(character, replacement)
 
