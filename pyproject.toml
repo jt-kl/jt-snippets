@@ -1,0 +1,45 @@
+[build-system]
+requires = ["setuptools>=59.6", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "jt_snippets"
+description = "JT Code Snippets"
+authors = [
+    { name="Jeremy Tan" },
+]
+requires-python = ">3.10.4"
+classifiers = [
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10.6"
+]
+# version="0.0.1"
+dynamic = ["version"]
+
+[tool.setuptools.dynamic]
+version = {attr = "jt_snippets.VERSION"}
+
+
+[tool.pytest.ini_options]
+addopts = "--cov --cov-report term-missing -vv -s"
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.black]
+line-length = 119
+
+
+[tool.mypy]
+mypy_path = "src"
+check_untyped_defs = true
+disallow_any_generics = true
+ignore_missing_imports = true
+no_implicit_optional = true
+show_error_codes = true
+strict_equality = true
+warn_redundant_casts = true
+warn_return_any = true
+warn_unreachable = true
+warn_unused_configs = true
+no_implicit_reexport = true
+
