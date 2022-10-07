@@ -4,7 +4,7 @@ import pathlib
 import unittest.mock
 
 import pytest
-from src.jt_snippets.io_ops import (
+from jt_snippets.io_ops import (
     create_directories,
     delete_directory,
     generate_file_hash,
