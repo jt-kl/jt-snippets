@@ -77,9 +77,8 @@ def validate_file_size(
     validate_is_file(path)
 
     if lower_bound >= upper_bound:
-        raise Exception(
-            f"Value of lower bound range cannot be greater "
-            f"than or equal to value of upper bound range"
+        raise ValueError(
+            f"Value of lower bound range cannot be greater " f"than or equal to value of upper bound range"
         )
 
     return lower_bound < path.stat().st_size < upper_bound
@@ -98,7 +97,14 @@ def create_directories(
     Args:
         paths: Collection of directory paths to be created
     """
-    [path.mkdir(parents=True, exist_ok=True, **kwargs) for path in paths]
+    [
+        path.mkdir(
+            parents=True,
+            exist_ok=True,
+            **kwargs,
+        )
+        for path in paths
+    ]
 
 
 def delete_directory(

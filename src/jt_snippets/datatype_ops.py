@@ -59,10 +59,15 @@ def to_decimal(
     Args:
         value: Value to be converted
         precision: Decimal precision length
-    """
-    if precision:
-        assert 0 < precision, f"Value of precision must be greater than 0"
 
+    Example:
+        to_decimal(3.142)
+        to_decimal("3.14259", 3)
+        to_decimal(43)
+    """
+    if precision and precision < 0:
+        raise ValueError(f"Value of precision must be greater than 0")
+    elif precision and precision > 0:
         decimal.getcontext().prec = precision
 
     if isinstance(value, float):

@@ -11,9 +11,7 @@ def validate_count_range(
         lower_bound: Acceptable lower bound range of value
         upper_bound: Acceptable upper bound range of value
     """
-    assert not lower_bound >= upper_bound, (
-        f"Value of lower bound range cannot be greater "
-        f"than or equal to value of upper bound range"
-    )
+    if not lower_bound >= upper_bound:
+        return lower_bound < _value < upper_bound
 
-    return lower_bound < _value < upper_bound
+    raise ValueError(f"Value of lower bound range cannot be greater " f"than or equal to value of upper bound range")

@@ -4,43 +4,25 @@ import shutil
 import tempfile
 import typing
 
-BASE_DIRECTORY = pathlib.Path(__file__).parent
-SOURCE_FILE = BASE_DIRECTORY.joinpath("test.csv")
-DESTINATION_DIRECTORY = BASE_DIRECTORY.joinpath("output.csv")
-
-# endregion: Pre-flight operations
-TEMP_FILE = tempfile.NamedTemporaryFile(mode="w", delete=True)
-FIELDS = [
-    "first_name",
-    "last_name",
-    "email_address",
-    "age",
-    "address_line_1",
-    "address_line_2",
-    "city",
-    "state",
-    "postal_code",
-    "country",
-    "mobile_number",
-]
-
 
 def update_csv_file(
-    source: pathlib.Path,
+    path: pathlib.Path,
     fields: list[str],
+    records: typing.Union[list[dict], typing.Iterator[dict]],
     header: bool = False,
 ):
     """
     Updates content of a CSV file
 
     Args:
-        source: Source CSV file
+        path: Source CSV file
         fields: Source CSV header fields
+        records: Collection of replacement records
         header: Source CSV contains header
     """
     temp_file = tempfile.NamedTemporaryFile(mode="w", delete=True)
 
-    with open(source, "r") as csv_file, temp_file:
+    with open(path, "r") as csv_file, temp_file:
         reader = csv.DictReader(csv_file, fieldnames=fields)
         writer = csv.DictWriter(temp_file, fieldnames=fields)
         writer.writeheader()
@@ -49,20 +31,23 @@ def update_csv_file(
         if header:
             next(reader)
 
-        for row in reader:
-            entry = dict()
+        for record in records:
+            for key, (original, replacement) in record.items():
 
-            # Perform row data checks and/or manipulations
-            for key, value in row.items():
-                if row["first_name"] == "Abigail":
-                    row["first_name"] = "Sarah"
+                for row in reader:
+                    entry = dict()
 
-                entry[key] = value
+                    # Perform row data checks and/or manipulations
+                    for _key, _value in row.items():
+                        if _key == key and _value == original:
+                            entry[key] = replacement
+                        else:
+                            entry[key] = _value
 
-            if entry:
-                writer.writerow(entry)
+                    if entry:
+                        writer.writerow(entry)
 
-        shutil.copy(pathlib.Path(TEMP_FILE.name), DESTINATION_DIRECTORY)
+        shutil.copy(pathlib.Path(temp_file.name), path)
 
 
 def read_csv_file(
@@ -71,7 +56,8 @@ def read_csv_file(
     delimiter: str = ",",
     **kwargs,
 ) -> typing.Iterator:
-    """Read CSV file.
+    """
+    Read CSV file.
 
     Args:
         path: Path to CSV file
@@ -79,7 +65,11 @@ def read_csv_file(
         delimiter: Record delimiter
     """
     with open(path, "r") as file:
-        reader = csv.DictReader(file, delimiter=delimiter, **kwargs)
+        reader = csv.DictReader(
+            file,
+            delimiter=delimiter,
+            **kwargs,
+        )
 
         if not header:
             yield from reader
@@ -107,7 +97,11 @@ def write_csv_file(
         header: Write header row
     """
     with open(path, "w") as file:
-        writer = csv.DictWriter(file, fieldnames=field_names, **kwargs)
+        writer = csv.DictWriter(
+            file,
+            fieldnames=field_names,
+            **kwargs,
+        )
 
         if header:
             writer.writeheader()
