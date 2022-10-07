@@ -1,7 +1,7 @@
 import unittest.mock
 
 import pytest
-from src.validator_ops import validate_count_range
+from src.jt_snippets.validator_ops import validate_count_range
 
 # region: Helper methods
 # endregion: Helper methods
@@ -51,10 +51,9 @@ validate_count_range_sad = [
         ),
         dict(
             result=None,
-            exception_type=AssertionError,
+            exception_type=ValueError,
             exception_message=(
-                f"Value of lower bound range cannot be greater "
-                f"than or equal to value of upper bound range"
+                f"Value of lower bound range cannot be greater " f"than or equal to value of upper bound range"
             ),
         ),
     ),
@@ -66,10 +65,9 @@ validate_count_range_sad = [
         ),
         dict(
             result=None,
-            exception_type=AssertionError,
+            exception_type=ValueError,
             exception_message=(
-                f"Value of lower bound range cannot be greater "
-                f"than or equal to value of upper bound range"
+                f"Value of lower bound range cannot be greater " f"than or equal to value of upper bound range"
             ),
         ),
     ),

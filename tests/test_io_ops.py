@@ -4,7 +4,7 @@ import pathlib
 import unittest.mock
 
 import pytest
-from src.io_ops import (
+from src.jt_snippets.io_ops import (
     create_directories,
     delete_directory,
     generate_file_hash,
@@ -19,9 +19,7 @@ from src.io_ops import (
 # region: Mocked resources
 
 
-def mock_directory(
-    exist: bool = True, childrens: collections.abc.Iterator = iter(())
-) -> unittest.mock.Mock:
+def mock_directory(exist: bool = True, childrens: collections.abc.Iterator = iter(())) -> unittest.mock.Mock:
     mock = unittest.mock.Mock(spec=pathlib.Path)
     mock.exists.return_value = exist
     mock.is_dir.return_value = True
@@ -170,8 +168,7 @@ validate_file_size_sad = [
         dict(
             exception_type=Exception,
             exception_message=(
-                f"Value of lower bound range cannot be greater "
-                f"than or equal to value of upper bound range"
+                f"Value of lower bound range cannot be greater " f"than or equal to value of upper bound range"
             ),
         ),
     ),
@@ -335,9 +332,7 @@ class TestIOOps:
     def test_happy_generate_file_hash(self, payload, expect):
         text = payload.pop("text").encode("utf-8")
 
-        with unittest.mock.patch(
-            "builtins.open", unittest.mock.mock_open(read_data=text)
-        ) as mocked_file:
+        with unittest.mock.patch("builtins.open", unittest.mock.mock_open(read_data=text)) as mocked_file:
             result = generate_file_hash(**payload)
 
             assert result == expect["result"]
@@ -346,21 +341,15 @@ class TestIOOps:
     def test_sad_generate_file_hash(self, payload, expect):
         text = payload.pop("text").encode("utf-8")
 
-        with unittest.mock.patch(
-            "builtins.open", unittest.mock.mock_open(read_data=text)
-        ) as mocked_file:
-            with pytest.raises(
-                expect["exception_type"], match=expect["exception_message"]
-            ):
+        with unittest.mock.patch("builtins.open", unittest.mock.mock_open(read_data=text)) as mocked_file:
+            with pytest.raises(expect["exception_type"], match=expect["exception_message"]):
                 result = generate_file_hash(**payload)
 
     @pytest.mark.parametrize("payload, expect", validate_file_hash_happy)
     def test_happy_validate_file_hash(self, payload, expect):
         text = payload.pop("text").encode("utf-8")
 
-        with unittest.mock.patch(
-            "builtins.open", unittest.mock.mock_open(read_data=text)
-        ) as mocked_file:
+        with unittest.mock.patch("builtins.open", unittest.mock.mock_open(read_data=text)) as mocked_file:
             result = validate_file_hash(**payload)
 
             assert result == expect["result"]

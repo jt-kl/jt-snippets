@@ -2,7 +2,7 @@ import datetime
 import unittest.mock
 
 import pytest
-from src.datetime_ops import DateTimeFormat, export_datetime
+from src.jt_snippets.datetime_ops import DateTimeFormat, export_datetime
 
 # region: Helper methods
 # endregion: Helper methods
