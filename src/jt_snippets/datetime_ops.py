@@ -1,7 +1,6 @@
 import datetime
 import enum
 import typing
-import zoneinfo
 
 
 class DateTimeFormat(enum.Enum):
@@ -82,3 +81,77 @@ def is_weekend(
         return False
 
     return True
+
+
+def get_weekdays(
+    ranges: typing.Union[tuple[datetime.date, datetime.date], None] = None,
+):
+    """
+    Get weekdays of given/current month
+
+    Args:
+        ranges: Start and end date ranges
+    """
+    weekdays = []
+
+    if not ranges:
+        day = datetime.date(
+            year=datetime.date.today().year,
+            month=datetime.date.today().month,
+            day=1,
+        )
+
+        month = day.month
+
+        while day.month == month:
+            if day.isoweekday() in [1, 2, 3, 4, 5]:
+                weekdays.append(day)
+
+            day += datetime.timedelta(days=1)
+    else:
+        range_start, range_end = ranges
+
+        while range_end > range_start:
+            if range_start.isoweekday() in [1, 2, 3, 4, 5]:
+                weekdays.append(range_start)
+
+            range_start += datetime.timedelta(days=1)
+
+    return weekdays
+
+
+def get_weekends(
+    ranges: typing.Union[tuple[datetime.date, datetime.date], None] = None,
+):
+    """
+    Get weekends of given/current month
+
+    Args:
+        ranges: Start and end date ranges
+    """
+    weekends = []
+
+    if not ranges:
+        day = datetime.date(
+            year=datetime.date.today().year,
+            month=datetime.date.today().month,
+            day=1,
+        )
+
+        month = day.month
+
+        while day.month == month:
+            if day.isoweekday() in [6, 7]:
+                weekends.append(day)
+
+            day += datetime.timedelta(days=1)
+    else:
+        range_start, range_end = ranges
+
+        while range_end > range_start:
+            if range_start.isoweekday() in [6, 7]:
+                weekends.append(range_start)
+
+            range_start += datetime.timedelta(days=1)
+
+    return weekends
