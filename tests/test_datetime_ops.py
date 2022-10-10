@@ -1,5 +1,6 @@
 import datetime
 import unittest.mock
+import zoneinfo
 
 import pytest
 from jt_snippets.datetime_ops import (
@@ -127,15 +128,15 @@ get_weekends_sad = []
 to_datetime_happy = [
     (
         dict(timestamp=1651382415),
-        dict(result=datetime.datetime(2022, 5, 1, 13, 20, 15)),
+        dict(result=datetime.datetime(2022, 5, 1, 13, 20, 15, tzinfo=zoneinfo.ZoneInfo("Asia/Kuala_Lumpur"))),
     ),
     (
         dict(timestamp=1651558230.0),
-        dict(result=datetime.datetime(2022, 5, 3, 14, 10, 30)),
+        dict(result=datetime.datetime(2022, 5, 3, 14, 10, 30, tzinfo=zoneinfo.ZoneInfo("Asia/Kuala_Lumpur"))),
     ),
     (
         dict(timestamp=1651841100000),
-        dict(result=datetime.datetime(2022, 5, 6, 20, 45, 00)),
+        dict(result=datetime.datetime(2022, 5, 6, 20, 45, 00, tzinfo=zoneinfo.ZoneInfo("Asia/Kuala_Lumpur"))),
     ),
 ]
 to_datetime_sad = []
