@@ -128,21 +128,15 @@ get_weekends_sad = []
 to_datetime_happy = [
     (
         dict(timestamp=1651382415),
-        dict(
-            result=datetime.datetime(2022, 5, 1, 13, 20, 15).astimezone(tzinfo=zoneinfo.ZoneInfo("Asia/Kuala_Lumpur"))
-        ),
+        dict(result=datetime.datetime(2022, 5, 1, 5, 20, 15)),
     ),
     (
         dict(timestamp=1651558230.0),
-        dict(
-            result=datetime.datetime(2022, 5, 3, 14, 10, 30).astimezone(tzinfo=zoneinfo.ZoneInfo("Asia/Kuala_Lumpur"))
-        ),
+        dict(result=datetime.datetime(2022, 5, 3, 6, 10, 30)),
     ),
     (
         dict(timestamp=1651841100000),
-        dict(
-            result=datetime.datetime(2022, 5, 6, 20, 45, 00).astimezone(tzinfo=zoneinfo.ZoneInfo("Asia/Kuala_Lumpur"))
-        ),
+        dict(result=datetime.datetime(2022, 5, 6, 12, 45, 00)),
     ),
 ]
 to_datetime_sad = []

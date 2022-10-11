@@ -45,10 +45,10 @@ def to_datetime(
     _datetime = None
 
     try:
-        _datetime = datetime.datetime.fromtimestamp(timestamp)
+        _datetime = datetime.datetime.utcfromtimestamp(timestamp)
     except ValueError:
         # Converts timestamp from milliseconds to seconds
-        _datetime = datetime.datetime.fromtimestamp(timestamp / 1000)
+        _datetime = datetime.datetime.utcfromtimestamp(timestamp / 1000)
 
     return _datetime
 
