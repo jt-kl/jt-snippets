@@ -45,7 +45,7 @@ def code_execution_timer(
         end_time = time.time()
 
         duration = (end_time - start_time) * 1000  # Convert to milliseconds
-        print(f"Elapsed duration: {duration} milliseconds")
+        print(f"{func.__name__} - Elapsed duration: {duration} milliseconds")
 
         return result
 
