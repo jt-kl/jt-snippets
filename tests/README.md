@@ -1,6 +1,6 @@
 ## Getting Started - Tests
 ![tests](https://github.com/jt-kl/jt-snippets/actions/workflows/tests.yml/badge.svg)
-![coverage](./tests/coverage.svg)
+![coverage](./coverage.svg)
 
 Setup your Python virtual environment with the corresponding dependant libraries and run the tests by using the following BASH commands:
 
