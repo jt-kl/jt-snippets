@@ -46,6 +46,7 @@ $ pip3 install -r requirements.txt --no-cache-dir
 # located in the "dist" directory. The "build" and/or "dist" 
 # directory can be safely removed
 
+$ python3 upgrade.py <options>
 $ python3 -m build
 ```
 
