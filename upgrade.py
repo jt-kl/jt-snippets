@@ -57,8 +57,25 @@ def main(
     if build:
         _version = _version.bump_build()
 
-    REFERENCE_FILE.write_text(str(_version))
-    MODULE_FILE.write_text(f'VERSION="{str(_version)}"')
+    confirmed = False
+
+    while not confirmed:
+        response = input(f"Upgrade current version: v{text} to v{_version} - Confirm (Y/N): ")
+
+        if not response.upper() in ["Y", "N"]:
+            print(f"Invalid response, try again.\n")
+
+            continue
+        else:
+            if response.upper() == "Y":
+                confirmed = True
+
+                REFERENCE_FILE.write_text(str(_version))
+                MODULE_FILE.write_text(f'VERSION="{str(_version)}"')
+
+                break
+            else:
+                break
 
 
 if __name__ == "__main__":
