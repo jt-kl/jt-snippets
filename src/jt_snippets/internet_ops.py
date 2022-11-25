@@ -1,7 +1,21 @@
-from collections import namedtuple
-from urllib.parse import urljoin, urlparse, urlsplit, urlunparse, urlunsplit
+from urllib.parse import urljoin, urlsplit, urlunparse
 
 from .models import URLParts
+
+
+def url_path_builder(
+    paths: list[str],
+):
+    """
+    URL Path Component Builder
+
+    Args:
+        paths: Collections of paths
+    """
+    sanitized = [i.strip("/") for i in paths if i]
+    _paths = [i for x in sanitized for i in x.split("/") if i]
+
+    return "/".join(_paths)
 
 
 def url_builder(
