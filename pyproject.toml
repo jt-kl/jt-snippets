@@ -1,44 +1,42 @@
 [build-system]
-requires = ["setuptools>=59.6", "wheel"]
 build-backend = "setuptools.build_meta"
+requires = ["setuptools>=59.6", "wheel"]
 
 [project]
-name = "jt_snippets"
-description = "JT Code Snippets"
-authors = [
-    { name="Jeremy Tan" },
-]
-requires-python = ">3.10.4"
+authors = [ { name="Jeremy Tan" } ]
 classifiers = [
     "Programming Language :: Python :: 3 :: Only",
     "Programming Language :: Python :: 3.10.6"
 ]
-dynamic = ["version"]
+description = "JT Code Snippets"
+dynamic = ["version", "dependencies"]
+name = "jt_snippets"
+requires-python = ">3.10.4"
+
 
 [tool.setuptools.dynamic]
-version = {attr = "jt_snippets.VERSION"}
+dependencies = { file=["requirements.txt"] }
+version = { attr = "jt_snippets.VERSION" }
 
 
 [tool.pytest.ini_options]
-addopts = "--cov --cov-report term-missing -vv -s"
-testpaths = ["tests"]
+addopts = "--cov=jt_snippets --cov-report term-missing -vv -s"
 pythonpath = ["."]
+testpaths = ["tests"]
 
 [tool.black]
 line-length = 119
 
-
 [tool.mypy]
-mypy_path = "src"
 check_untyped_defs = true
 disallow_any_generics = true
 ignore_missing_imports = true
+mypy_path = "src"
 no_implicit_optional = true
+no_implicit_reexport = true
 show_error_codes = true
 strict_equality = true
 warn_redundant_casts = true
 warn_return_any = true
 warn_unreachable = true
 warn_unused_configs = true
-no_implicit_reexport = true
-
