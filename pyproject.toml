@@ -20,7 +20,7 @@ version = { attr = "jt_snippets.VERSION" }
 
 
 [tool.pytest.ini_options]
-addopts = "--cov=jt_snippets --cov-report term-missing -vv -s"
+addopts = "-vvv --cov-report=term-missing --cov=jt_snippets"
 pythonpath = ["."]
 testpaths = ["tests"]
 
