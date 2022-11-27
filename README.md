@@ -48,6 +48,10 @@ $ pip3 install -r requirements.txt --no-cache-dir
 
 $ python3 upgrade.py <options>
 $ python3 -m build
+
+# Manually execute tests locally and generate a coverage badge and 
+# check it into the repository
+$ coverage-badge -o ./tests/coverage.svg
 ```
 
 ## Testing
@@ -67,5 +71,5 @@ $ pip3 install -r requirements.txt --no-cache-dir
 $ pip3 install -e .
 
 # Execute tests
-pytest
+pytest -vvv --cov-report=term-missing --cov=jt_snippets
 ```
