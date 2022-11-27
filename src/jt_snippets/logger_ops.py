@@ -6,6 +6,7 @@ from typing import Optional
 
 
 def create_logger(
+    name: Optional[str] = __name__,
     directory: Optional[Path] = None,
     level: int = DEBUG,
 ) -> Logger:
@@ -15,7 +16,7 @@ def create_logger(
     Args:
         directory: Storage path for log file
     """
-    logger = getLogger(__name__)
+    logger = getLogger(name)
     logger.setLevel(level)
 
     log_format = Formatter("%(asctime)s|%(levelname)-8s|%(module)s:%(funcName)s:%(lineno)d - %(message)s")
@@ -34,12 +35,12 @@ def create_logger(
         logger.addHandler(file_handler)
 
     # Stream handler
-    stream_handler = StreamHandler(stdout)
+    # stream_handler = StreamHandler(stdout)
 
-    stream_handler.setLevel(level)
-    stream_handler.setFormatter(log_format)
+    # stream_handler.setLevel(level)
+    # stream_handler.setFormatter(log_format)
 
-    logger.addHandler(stream_handler)
+    # logger.addHandler(stream_handler)
 
     # TODO: Add syslog handler
 
