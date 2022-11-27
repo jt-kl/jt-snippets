@@ -1,9 +1,9 @@
-import datetime
-import enum
-import typing
+from datetime import date, datetime, timedelta
+from enum import Enum
+from typing import Optional, Union
 
 
-class DateTimeFormat(enum.Enum):
+class DateTimeFormat(Enum):
     """
     Date Time Format
     """
@@ -13,11 +13,11 @@ class DateTimeFormat(enum.Enum):
 
 
 def export_datetime(
-    _datetime: datetime.datetime,
-    _format: typing.Union[DateTimeFormat, str],
+    _datetime: datetime,
+    _format: Union[DateTimeFormat, str],
 ):
     """
-    Exports a datetime.datetime object to an ISO8601 or RFC3339 formatted string
+    Exports a datetime object to an ISO8601 or RFC3339 formatted string
 
     Args:
         _datetime: Object to be formatted
@@ -34,10 +34,10 @@ def export_datetime(
 
 
 def to_datetime(
-    timestamp: typing.Union[int, float],
-) -> datetime.datetime:
+    timestamp: Union[int, float],
+) -> datetime:
     """
-    Converts timestamp to datetime.datetime
+    Converts timestamp to datetime
 
     Args:
         timestamp: Timestamp value
@@ -45,16 +45,16 @@ def to_datetime(
     _datetime = None
 
     try:
-        _datetime = datetime.datetime.utcfromtimestamp(timestamp)
+        _datetime = datetime.utcfromtimestamp(timestamp)
     except ValueError:
         # Converts timestamp from milliseconds to seconds
-        _datetime = datetime.datetime.utcfromtimestamp(timestamp / 1000)
+        _datetime = datetime.utcfromtimestamp(timestamp / 1000)
 
     return _datetime
 
 
 def is_weekday(
-    day: typing.Union[datetime.datetime, datetime.date],
+    day: Union[datetime, date],
 ) -> bool:
     """
     Check if a given day is a weekday or otherwise
@@ -69,7 +69,7 @@ def is_weekday(
 
 
 def is_weekend(
-    day: typing.Union[datetime.datetime, datetime.date],
+    day: Union[datetime, date],
 ) -> bool:
     """
     Check if a given day is a weekend or otherwise
@@ -84,7 +84,7 @@ def is_weekend(
 
 
 def get_weekdays(
-    ranges: typing.Union[tuple[datetime.date, datetime.date], None] = None,
+    ranges: Optional[tuple[date, date]] = None,
 ):
     """
     Get weekdays of given/current month
@@ -95,9 +95,9 @@ def get_weekdays(
     weekdays = []
 
     if not ranges:
-        day = datetime.date(
-            year=datetime.date.today().year,
-            month=datetime.date.today().month,
+        day = date(
+            year=date.today().year,
+            month=date.today().month,
             day=1,
         )
 
@@ -107,7 +107,7 @@ def get_weekdays(
             if day.isoweekday() in [1, 2, 3, 4, 5]:
                 weekdays.append(day)
 
-            day += datetime.timedelta(days=1)
+            day += timedelta(days=1)
     else:
         range_start, range_end = ranges
 
@@ -115,13 +115,13 @@ def get_weekdays(
             if range_start.isoweekday() in [1, 2, 3, 4, 5]:
                 weekdays.append(range_start)
 
-            range_start += datetime.timedelta(days=1)
+            range_start += timedelta(days=1)
 
     return weekdays
 
 
 def get_weekends(
-    ranges: typing.Union[tuple[datetime.date, datetime.date], None] = None,
+    ranges: Optional[tuple[date, date]] = None,
 ):
     """
     Get weekends of given/current month
@@ -132,9 +132,9 @@ def get_weekends(
     weekends = []
 
     if not ranges:
-        day = datetime.date(
-            year=datetime.date.today().year,
-            month=datetime.date.today().month,
+        day = date(
+            year=date.today().year,
+            month=date.today().month,
             day=1,
         )
 
@@ -144,7 +144,7 @@ def get_weekends(
             if day.isoweekday() in [6, 7]:
                 weekends.append(day)
 
-            day += datetime.timedelta(days=1)
+            day += timedelta(days=1)
     else:
         range_start, range_end = ranges
 
@@ -152,6 +152,6 @@ def get_weekends(
             if range_start.isoweekday() in [6, 7]:
                 weekends.append(range_start)
 
-            range_start += datetime.timedelta(days=1)
+            range_start += timedelta(days=1)
 
     return weekends

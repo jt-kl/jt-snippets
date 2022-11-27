@@ -1,6 +1,5 @@
-import unittest.mock
-
 import pytest
+
 from jt_snippets.validator_ops import validate_count_range
 
 # region: Helper methods

@@ -1,13 +1,12 @@
-import logging
-import logging.handlers
-import pathlib
-import sys
-import typing
+from logging import DEBUG, Formatter, Logger, StreamHandler, getLogger
+from logging.handlers import RotatingFileHandler
+from pathlib import Path
+from sys import stdout
 
 
 def create_logger(
-    directory: pathlib.Path,
-) -> logging.Logger:
+    directory: Path,
+) -> Logger:
     """
     Create custom application logger
 
@@ -16,25 +15,21 @@ def create_logger(
     """
     directory.mkdir(exist_ok=True)
 
-    logger = logging.getLogger(__name__)
-    logger.setLevel(logging.DEBUG)
+    logger = getLogger(__name__)
+    logger.setLevel(DEBUG)
 
     # Log file handler
     log_file = directory.joinpath("application.log")
-    log_format = logging.Formatter(
-        "%(asctime)s|%(levelname)-8s|%(module)s:%(funcName)s:%(lineno)d - %(message)s"
-    )
+    log_format = Formatter("%(asctime)s|%(levelname)-8s|%(module)s:%(funcName)s:%(lineno)d - %(message)s")
 
-    file_handler = logging.handlers.RotatingFileHandler(
-        log_file, maxBytes=10485760, backupCount=10
-    )
-    file_handler.setLevel(logging.DEBUG)
+    file_handler = RotatingFileHandler(log_file, maxBytes=10485760, backupCount=10)
+    file_handler.setLevel(DEBUG)
     file_handler.setFormatter(log_format)
     logger.addHandler(file_handler)
 
     # STDOUT stream handler
-    stream_handler = logging.StreamHandler(sys.stdout)
-    stream_handler.setLevel(logging.DEBUG)
+    stream_handler = StreamHandler(stdout)
+    stream_handler.setLevel(DEBUG)
     stream_handler.setFormatter(log_format)
     logger.addHandler(stream_handler)
 

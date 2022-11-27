@@ -1,9 +1,9 @@
-import collections.abc
-import datetime
-import pathlib
-import unittest.mock
+from collections.abc import Iterator
+from pathlib import Path
+from unittest.mock import Mock, mock_open, patch
 
 import pytest
+
 from jt_snippets.io_ops import (
     create_directories,
     delete_directory,
@@ -19,8 +19,11 @@ from jt_snippets.io_ops import (
 # region: Mocked resources
 
 
-def mock_directory(exist: bool = True, childrens: collections.abc.Iterator = iter(())) -> unittest.mock.Mock:
-    mock = unittest.mock.Mock(spec=pathlib.Path)
+def mock_directory(
+    exist: bool = True,
+    childrens: Iterator = iter(()),
+) -> Mock:
+    mock = Mock(spec=Path)
     mock.exists.return_value = exist
     mock.is_dir.return_value = True
     mock.is_file.return_value = False
@@ -29,14 +32,20 @@ def mock_directory(exist: bool = True, childrens: collections.abc.Iterator = ite
     return mock
 
 
-def mock_directories(total: int = 1, **kwargs) -> list[unittest.mock.Mock]:
+def mock_directories(
+    total: int = 1,
+    **kwargs,
+) -> list[Mock]:
     mocks = [mock_directory(**kwargs) for i in range(total)]
 
     return mocks
 
 
-def mock_file(exist: bool = True, st_size: int = 1024) -> unittest.mock.Mock:
-    mock = unittest.mock.Mock(spec=pathlib.Path)
+def mock_file(
+    exist: bool = True,
+    st_size: int = 1024,
+) -> Mock:
+    mock = Mock(spec=Path)
     mock.exists.return_value = exist
     mock.is_dir.return_value = False
     mock.is_file.return_value = True
@@ -45,7 +54,10 @@ def mock_file(exist: bool = True, st_size: int = 1024) -> unittest.mock.Mock:
     return mock
 
 
-def mock_files(total: int = 1, **kwargs) -> list[unittest.mock.Mock]:
+def mock_files(
+    total: int = 1,
+    **kwargs,
+) -> list[Mock]:
     mocks = [mock_file(**kwargs) for i in range(total)]
 
     return mocks
@@ -275,15 +287,16 @@ class TestIOOps:
 
     @pytest.mark.parametrize("payload", delete_directory_happy)
     def test_happy_delete_directory(self, payload):
-        delete_directory(**payload)
+        with patch("pathlib.Path.iterdir", return_value=mock_files(3)) as mock:
+            delete_directory(**payload)
 
-        payload["path"].exists.assert_called_once()
-        payload["path"].is_dir.assert_called_once()
+            payload["path"].exists.assert_called_once()
+            payload["path"].is_dir.assert_called_once()
 
-        if payload.get("recursive") == True:
-            payload["path"].iterdir.assert_called_once()
-        else:
-            payload["path"].rmdir.assert_called()
+            if payload.get("recursive") == True:
+                payload["path"].iterdir.assert_called_once()
+            else:
+                payload["path"].rmdir.assert_called()
 
     @pytest.mark.parametrize("payload, expect", delete_directory_sad)
     def test_sad_delete_directory(self, payload, expect):
@@ -294,7 +307,7 @@ class TestIOOps:
     def test_happy_list_directory(self, payload):
         results = list_directory(**payload)
 
-        assert isinstance(results, collections.abc.Iterator)
+        assert isinstance(results, Iterator)
 
         results = list(results)
 
@@ -332,7 +345,7 @@ class TestIOOps:
     def test_happy_generate_file_hash(self, payload, expect):
         text = payload.pop("text").encode("utf-8")
 
-        with unittest.mock.patch("builtins.open", unittest.mock.mock_open(read_data=text)) as mocked_file:
+        with patch("builtins.open", mock_open(read_data=text)) as mocked_file:
             result = generate_file_hash(**payload)
 
             assert result == expect["result"]
@@ -341,7 +354,7 @@ class TestIOOps:
     def test_sad_generate_file_hash(self, payload, expect):
         text = payload.pop("text").encode("utf-8")
 
-        with unittest.mock.patch("builtins.open", unittest.mock.mock_open(read_data=text)) as mocked_file:
+        with patch("builtins.open", mock_open(read_data=text)) as mocked_file:
             with pytest.raises(expect["exception_type"], match=expect["exception_message"]):
                 result = generate_file_hash(**payload)
 
@@ -349,7 +362,7 @@ class TestIOOps:
     def test_happy_validate_file_hash(self, payload, expect):
         text = payload.pop("text").encode("utf-8")
 
-        with unittest.mock.patch("builtins.open", unittest.mock.mock_open(read_data=text)) as mocked_file:
+        with patch("builtins.open", mock_open(read_data=text)) as mocked_file:
             result = validate_file_hash(**payload)
 
             assert result == expect["result"]

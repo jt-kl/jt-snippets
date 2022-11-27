@@ -1,22 +1,32 @@
-import decimal
-import enum
-import typing
+from datetime import datetime
+from decimal import Decimal
+from enum import Enum
+from typing import Optional, Union
 
 
 def to_dictionary(
     _object: object,
-) -> typing.Union[dict, None]:
+    reserved: bool = False,
+    _sorted: bool = False,
+) -> Union[dict, None]:
     """
     Converts complex object to a dictionary data type
 
     Args:
         _object: Custom object to be converted
+        reserved: Parse for reserved words
+        _sorted: Sort dictionary by keys
     """
+    reserved_keywords = ["from", "class"]
+
     if isinstance(_object, dict):
         data = {}
 
         for key, value in _object.items():
             data[key] = to_dictionary(value)
+
+        if _sorted:
+            return dict(sorted(data.items()))
 
         return data
 
@@ -28,18 +38,29 @@ def to_dictionary(
                 data[key] = to_dictionary(value)
 
             elif isinstance(value, list):
+                if not value:
+                    data[key] = value
+
                 for item in value:
                     to_dictionary(item)
 
-            elif isinstance(value, enum.Enum):
+            elif isinstance(value, datetime):
+                data[key] = value.isoformat("T") + "Z"
+
+            elif isinstance(value, Enum):
                 data[key] = value.value
 
             elif hasattr(value, "__dict__"):
                 data[key] = to_dictionary(value)
 
             else:
+                if reserved and key.endswith("_") and key.rstrip("_") in reserved_keywords:
+                    data[key.rstrip("_")] = value
+                else:
+                    data[key] = value
 
-                data[key] = value
+        if _sorted:
+            return dict(sorted(data.items()))
 
         return data
 
@@ -47,29 +68,21 @@ def to_dictionary(
 
 
 def to_decimal(
-    value: typing.Union[str, float, int],
-    precision: typing.Union[int, None] = None,
-) -> decimal.Decimal:
+    value: Union[str, float, int],
+) -> Decimal:
     """
-    Converts the following object types below to decimal.Decimal
+    Converts the following object types below to Decimal
     - string
     - float
     - integer
 
     Args:
         value: Value to be converted
-        precision: Decimal precision length
 
     Example:
         to_decimal(3.142)
-        to_decimal("3.14259", 3)
-        to_decimal(43)
+        to_decimal(1,432,423.31)
     """
-    if precision and precision < 0:
-        raise ValueError(f"Value of precision must be greater than 0")
-    elif precision and precision > 0:
-        decimal.getcontext().prec = precision
-
     if isinstance(value, float):
         value = str(value)
 
@@ -83,4 +96,4 @@ def to_decimal(
     for character, replacement in [(",", "")]:
         value = value.replace(character, replacement)
 
-    return decimal.Decimal(value)
+    return Decimal(value)

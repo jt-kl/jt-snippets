@@ -1,9 +1,9 @@
 #!/usr/bin/env python3.10.6
-import argparse
-import pathlib
-import re
 
-import semver
+from argparse import ArgumentParser
+from pathlib import Path
+
+from semver import VersionInfo
 
 
 def main(
@@ -29,7 +29,7 @@ def main(
     """
     # region: Pre-flight operations
 
-    BASE_DIRECTORY = pathlib.Path(__name__).parent
+    BASE_DIRECTORY = Path(__name__).parent
     REFERENCE_FILE = BASE_DIRECTORY.joinpath("VERSION")
     MODULE_FILE = BASE_DIRECTORY.joinpath("src/jt_snippets/_version.py")
 
@@ -40,7 +40,7 @@ def main(
     if not text:
         text = "0.0.0"
 
-    _version = semver.VersionInfo.parse(text)
+    _version = VersionInfo.parse(text)
 
     if major:
         _version = _version.bump_major()
@@ -80,7 +80,7 @@ def main(
 
 if __name__ == "__main__":
 
-    parser = argparse.ArgumentParser(description="Semantic Versioning Utility")
+    parser = ArgumentParser(description="Semantic Versioning Utility")
     parser.add_argument(
         "--major",
         action="store_true",

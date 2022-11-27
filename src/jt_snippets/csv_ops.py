@@ -1,14 +1,14 @@
-import csv
-import pathlib
 import shutil
-import tempfile
-import typing
+from csv import DictReader, DictWriter
+from pathlib import Path
+from tempfile import NamedTemporaryFile
+from typing import Iterator, Union
 
 
 def update_csv_file(
-    path: pathlib.Path,
+    path: Path,
     fields: list[str],
-    records: typing.Union[list[dict], typing.Iterator[dict]],
+    records: Union[list[dict], Iterator[dict]],
     header: bool = False,
 ):
     """
@@ -20,11 +20,11 @@ def update_csv_file(
         records: Collection of replacement records
         header: Source CSV contains header
     """
-    temp_file = tempfile.NamedTemporaryFile(mode="w", delete=True)
+    temp_file = NamedTemporaryFile(mode="w", delete=True)
 
     with open(path, "r") as csv_file, temp_file:
-        reader = csv.DictReader(csv_file, fieldnames=fields)
-        writer = csv.DictWriter(temp_file, fieldnames=fields)
+        reader = DictReader(csv_file, fieldnames=fields)
+        writer = DictWriter(temp_file, fieldnames=fields)
         writer.writeheader()
 
         # Skips first/header row
@@ -47,15 +47,15 @@ def update_csv_file(
                     if entry:
                         writer.writerow(entry)
 
-        shutil.copy(pathlib.Path(temp_file.name), path)
+        shutil.copy(Path(temp_file.name), path)
 
 
 def read_csv_file(
-    path: pathlib.Path,
+    path: Path,
     header: bool = False,
     delimiter: str = ",",
     **kwargs,
-) -> typing.Iterator:
+) -> Iterator:
     """
     Read CSV file.
 
@@ -65,7 +65,7 @@ def read_csv_file(
         delimiter: Record delimiter
     """
     with open(path, "r") as file:
-        reader = csv.DictReader(
+        reader = DictReader(
             file,
             delimiter=delimiter,
             **kwargs,
@@ -81,9 +81,9 @@ def read_csv_file(
 
 
 def write_csv_file(
-    path: pathlib.Path,
+    path: Path,
     field_names: list,
-    rows: typing.Union[list[dict], typing.Iterator[dict]],
+    rows: Union[list[dict], Iterator[dict]],
     header: bool = True,
     **kwargs,
 ):
@@ -97,7 +97,7 @@ def write_csv_file(
         header: Write header row
     """
     with open(path, "w") as file:
-        writer = csv.DictWriter(
+        writer = DictWriter(
             file,
             fieldnames=field_names,
             **kwargs,

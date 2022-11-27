@@ -1,14 +1,14 @@
-import collections.abc
 import hashlib
-import pathlib
-import typing
+from collections.abc import Iterator
+from pathlib import Path
+from typing import Optional, Union
 
 # region: Validators
 
 
 def validate_file_hash(
     _hash: str,
-    path: pathlib.Path,
+    path: Path,
     algorithm: str = "md5",
 ) -> bool:
     """
@@ -23,7 +23,7 @@ def validate_file_hash(
 
 
 def validate_path_exists(
-    path: pathlib.Path,
+    path: Path,
 ):
     """
     Validates path exists
@@ -36,7 +36,7 @@ def validate_path_exists(
 
 
 def validate_is_directory(
-    path: pathlib.Path,
+    path: Path,
 ):
     """
     Validates path is directory
@@ -49,7 +49,7 @@ def validate_is_directory(
 
 
 def validate_is_file(
-    path: pathlib.Path,
+    path: Path,
 ):
     """
     Validates path is file
@@ -62,7 +62,7 @@ def validate_is_file(
 
 
 def validate_file_size(
-    path: pathlib.Path,
+    path: Path,
     lower_bound: int,
     upper_bound: int,
 ) -> bool:
@@ -88,7 +88,7 @@ def validate_file_size(
 
 
 def create_directories(
-    paths: list[pathlib.Path],
+    paths: list[Path],
     **kwargs,
 ):
     """
@@ -108,7 +108,7 @@ def create_directories(
 
 
 def delete_directory(
-    path: pathlib.Path,
+    path: Path,
     recursive: bool = False,
 ):
     """
@@ -144,9 +144,9 @@ def delete_directory(
 
 
 def list_directory(
-    path: pathlib.Path,
-    is_file: typing.Union[bool, None] = None,
-) -> collections.abc.Iterator:
+    path: Path,
+    is_file: Optional[bool] = None,
+) -> Iterator:
     """
     Helper method to list contents of a directory
 
@@ -168,7 +168,7 @@ def list_directory(
 
 
 def generate_file_hash(
-    path: pathlib.Path,
+    path: Path,
     algorithm: str = "md5",
 ) -> str:
     """

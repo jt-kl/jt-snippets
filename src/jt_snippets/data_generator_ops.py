@@ -1,4 +1,4 @@
-import random
+from random import randrange
 
 import faker
 
@@ -43,7 +43,7 @@ def generate_people_data(
                 first_name=_first_name,
                 last_name=_last_name,
                 email_address=f"{_first_name.lower()}.{_last_name.lower()}@acme.com",
-                age=random.randrange(18, 55),
+                age=randrange(18, 55),
                 address_line_1=f.building_number(),
                 address_line_2=f"{f.street_name()} {f.street_suffix()}",
                 city=f.city(),

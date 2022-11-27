@@ -6,8 +6,6 @@ from jt_snippets.internet_ops import url_builder, url_path_builder
 # endregion: Helper methods
 
 # region: Mocked resources
-
-
 # endregion: Mocked resources
 
 # region: PyTest parametrized variables
