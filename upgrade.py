@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.10.6
 
-from argparse import ArgumentParser
+from argparse import ArgumentParser, BooleanOptionalAction
 from pathlib import Path
 
 from semver import VersionInfo
@@ -101,7 +101,7 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--prerelease",
-        action=argparse.BooleanOptionalAction,
+        action=BooleanOptionalAction,
         default=False,
         dest="prerelease",
         help="Invoke to bump pre-release version number",
