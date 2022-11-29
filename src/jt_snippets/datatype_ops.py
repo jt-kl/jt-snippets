@@ -8,7 +8,7 @@ def to_dictionary(
     _object: object,
     reserved: bool = False,
     _sorted: bool = False,
-) -> Union[dict, None]:
+):
     """
     Converts complex object to a dictionary data type
 
@@ -18,6 +18,9 @@ def to_dictionary(
         _sorted: Sort dictionary by keys
     """
     reserved_keywords = ["from", "class"]
+
+    if isinstance(_object, str):
+        return _object
 
     if isinstance(_object, dict):
         data = {}
@@ -41,8 +44,9 @@ def to_dictionary(
                 if not value:
                     data[key] = value
 
+                data[key] = list()
                 for item in value:
-                    to_dictionary(item)
+                    data[key].append(to_dictionary(item))
 
             elif isinstance(value, datetime):
                 data[key] = value.isoformat("T") + "Z"
@@ -97,3 +101,10 @@ def to_decimal(
         value = value.replace(character, replacement)
 
     return Decimal(value)
+
+
+def prettify_json():
+    """
+    Prettify JSON
+    """
+    pass
