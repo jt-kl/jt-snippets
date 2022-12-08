@@ -23,7 +23,13 @@ def to_dictionary(
         data = {}
 
         for key, value in _object.__dict__.items():
-            if hasattr(value, "__dict__"):
+            if isinstance(value, Enum):
+                data[key] = value.value
+
+            elif isinstance(value, datetime):
+                data[key] = value.isoformat("T") + "Z"
+
+            elif hasattr(value, "__dict__"):
                 data[key] = to_dictionary(value)
 
             elif isinstance(value, dict):
@@ -34,12 +40,6 @@ def to_dictionary(
                     data[key] = value
                 else:
                     data[key] = [to_dictionary(item) for item in value]
-
-            elif isinstance(value, datetime):
-                data[key] = value.isoformat("T") + "Z"
-
-            elif isinstance(value, Enum):
-                data[key] = value.value
 
             else:
                 if reserved and key.endswith("_") and key.rstrip("_") in reserved_keywords:
