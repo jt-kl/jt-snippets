@@ -19,43 +19,27 @@ def to_dictionary(
     """
     reserved_keywords = ["from", "class"]
 
-    if isinstance(_object, str):
-        return _object
-
-    if isinstance(_object, dict):
-        data = {}
-
-        for key, value in _object.items():
-            data[key] = to_dictionary(value)
-
-        if _sorted:
-            return dict(sorted(data.items()))
-
-        return data
-
     if hasattr(_object, "__dict__"):
         data = {}
 
         for key, value in _object.__dict__.items():
-            if isinstance(value, dict):
+            if hasattr(value, "__dict__"):
+                data[key] = to_dictionary(value)
+
+            elif isinstance(value, dict):
                 data[key] = to_dictionary(value)
 
             elif isinstance(value, list):
                 if not value:
                     data[key] = value
-
-                data[key] = list()
-                for item in value:
-                    data[key].append(to_dictionary(item))
+                else:
+                    data[key] = [to_dictionary(item) for item in value]
 
             elif isinstance(value, datetime):
                 data[key] = value.isoformat("T") + "Z"
 
             elif isinstance(value, Enum):
                 data[key] = value.value
-
-            elif hasattr(value, "__dict__"):
-                data[key] = to_dictionary(value)
 
             else:
                 if reserved and key.endswith("_") and key.rstrip("_") in reserved_keywords:
@@ -68,7 +52,19 @@ def to_dictionary(
 
         return data
 
-    return None
+    # Accounts for list of simple native objects: strings, integers, floats
+    # and decimals
+    conditions = (
+        isinstance(_object, str),
+        isinstance(_object, int),
+        isinstance(_object, float),
+        isinstance(_object, Decimal),
+    )
+
+    if any(conditions):
+        return _object
+
+    raise Exception(f"Object conversion error: {_object}")
 
 
 def to_decimal(
