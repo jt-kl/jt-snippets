@@ -30,16 +30,16 @@ def to_dictionary(
                 data[key] = value.isoformat("T") + "Z"
 
             elif hasattr(value, "__dict__"):
-                data[key] = to_dictionary(value)
+                data[key] = to_dictionary(value, reserved, _sorted)
 
             elif isinstance(value, dict):
-                data[key] = to_dictionary(value)
+                data[key] = to_dictionary(value, reserved, _sorted)
 
             elif isinstance(value, list):
                 if not value:
                     data[key] = value
                 else:
-                    data[key] = [to_dictionary(item) for item in value]
+                    data[key] = [to_dictionary(item, reserved, _sorted) for item in value]
 
             else:
                 if reserved and key.endswith("_") and key.rstrip("_") in reserved_keywords:
