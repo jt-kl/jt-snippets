@@ -1,7 +1,7 @@
 #!/usr/bin/env python3.10.6
-
 from argparse import ArgumentParser, BooleanOptionalAction
 from pathlib import Path
+from sys import exit
 
 from semver import VersionInfo
 
@@ -33,7 +33,7 @@ def main(
     REFERENCE_FILE = BASE_DIRECTORY.joinpath("VERSION")
     MODULE_FILE = BASE_DIRECTORY.joinpath("src/jt_snippets/_version.py")
 
-    # region: Pre-flight operations
+    # endregion: Pre-flight operations
 
     text = REFERENCE_FILE.read_text()
 
@@ -41,6 +41,18 @@ def main(
         text = "0.0.0"
 
     _version = VersionInfo.parse(text)
+
+    conditions = [
+        major == False,
+        minor == False,
+        patch == False,
+        prerelease == False,
+        build == False,
+    ]
+
+    if all(conditions):
+        print(f"Current version: {_version}")
+        exit()
 
     if major:
         _version = _version.bump_major()
