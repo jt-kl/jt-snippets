@@ -1,7 +1,19 @@
 from datetime import datetime
 from decimal import Decimal
 from enum import Enum
-from typing import Optional, Union
+from typing import Any, Union
+
+
+def dictionary_factory(
+    data: list[tuple[str, Any]],
+):
+    """
+    Conversion factory for dataclasses.asdict()
+
+    Args:
+        data: Data feed from dataclasses.asdict()
+    """
+    return [dict(key=value.isoformat()) if isinstance(value, datetime) else value for key, value in data]
 
 
 def to_dictionary(
