@@ -19,6 +19,9 @@ def dictionary_factory(
         if isinstance(value, datetime) or isinstance(value, date):
             converted[key] = value.isoformat()
 
+        elif isinstance(value, Enum):
+            converted[key] = value.value
+        
         else:
             converted[key] = value
 
