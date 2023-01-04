@@ -4,6 +4,68 @@ from enum import Enum
 from typing import Any, Union
 
 
+def is_compound_reserved(
+    key: str,
+) -> bool:
+    """
+    Check for keys that are sub-set of Python reserved words
+
+    Args:
+        key: Name of key
+    """
+    reserved_words = [
+        "False",
+        "def",
+        "if",
+        "raise",
+        "None",
+        "del",
+        "import",
+        "return",
+        "True",
+        "elif",
+        "in",
+        "try",
+        "and",
+        "else",
+        "is",
+        "while",
+        "as",
+        "except",
+        "lambda",
+        "with",
+        "assert",
+        "finally",
+        "nonlocal",
+        "yield",
+        "break",
+        "for",
+        "not",
+        "class",
+        "from",
+        "or",
+        "continue",
+        "global",
+        "pass",
+    ]
+    custom_words = [
+        "type",
+        "self",
+        "format",
+        "reversed",
+    ]
+
+    reserved_words.extend(custom_words)
+
+    if key.endswith("_"):
+        splits = key.split("_")
+        if len(splits) == 2:
+            if splits[0] in reserved_words:
+                return True
+
+    return False
+
+
 def dictionary_factory(
     data: list[tuple[str, Any]],
 ) -> dict:
@@ -16,12 +78,14 @@ def dictionary_factory(
     converted = dict()
 
     for key, value in data:
+        key = key.strip("_") if is_compound_reserved(key) else key
+
         if isinstance(value, datetime) or isinstance(value, date):
             converted[key] = value.isoformat()
 
         elif isinstance(value, Enum):
             converted[key] = value.value
-        
+
         else:
             converted[key] = value
 
