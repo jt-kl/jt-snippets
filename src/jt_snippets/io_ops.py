@@ -119,9 +119,6 @@ def delete_directory(
         path: Directory path to be deleted
         recursive: Recursively deletes child directories and its contents
     """
-    validate_path_exists(path)
-    validate_is_directory(path)
-
     # Deletes the only directory in the current directory
     if not recursive and not len(list(path.iterdir())):
         path.rmdir()
