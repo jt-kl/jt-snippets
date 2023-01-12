@@ -155,9 +155,6 @@ def list_directory(
         path: Directory path to be iterated
         is_file: Return files, directories or both in results
     """
-    # validate_path_exists(path)
-    # validate_is_directory(path)
-
     for item in path.iterdir():
         if is_file is not None:
             if is_file and item.is_file():
