@@ -179,8 +179,6 @@ def generate_file_hash(
         path: Source file path to generate hash
         algorithM: Hashing algorithm to use. Example: "md5", "sha256"
     """
-    validate_is_file(path)
-
     if algorithm not in ["md5", "sha256"]:
         raise Exception(f"Unsupported hash algorithm")
 

@@ -235,12 +235,12 @@ generate_file_hash_sad = [
         dict(
             path=mock_directory(),
             algorithm="sha256",
-            text="@zn@Fo`V2CVT%K3S",
+            text="",
         ),
         dict(
             result="ceb9fb9796b0d7c7bb822039a312cd0ebdefbf53ab12097f77a16000adb4d0a5",
-            exception_type=Exception,
-            exception_message=(f"Path is not a file."),
+            exception_type=IsADirectoryError,
+            exception_message="",
         ),
     ),
 ]
@@ -367,9 +367,17 @@ class TestIOOps:
     def test_sad_generate_file_hash(self, payload, expect):
         text = payload.pop("text").encode("utf-8")
 
-        with patch("builtins.open", mock_open(read_data=text)) as mocked_file:
-            with pytest.raises(expect["exception_type"], match=expect["exception_message"]):
-                result = generate_file_hash(**payload)
+        if text:
+            with patch("builtins.open", mock_open(read_data=text)) as mocked_file:
+                with pytest.raises(expect["exception_type"], match=expect["exception_message"]):
+                    result = generate_file_hash(**payload)
+        else:
+            with patch("builtins.open", new_callable=mock_open) as mocked_file:
+                mf = mocked_file.return_value
+                mf.read.side_effect = IsADirectoryError
+
+                with pytest.raises(expect["exception_type"], match=expect["exception_message"]):
+                    result = generate_file_hash(**payload)
 
     @pytest.mark.parametrize("payload, expect", validate_file_hash_happy)
     def test_happy_validate_file_hash(self, payload, expect):
