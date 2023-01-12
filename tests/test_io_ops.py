@@ -1,14 +1,17 @@
 from collections.abc import Iterator
+from datetime import datetime
 from pathlib import Path
 from unittest.mock import Mock, mock_open, patch
 
 import pytest
 
+import jt_snippets.io_ops
 from jt_snippets.io_ops import (
     create_directories,
     delete_directory,
     generate_file_hash,
     list_directory,
+    suffix_datetime,
     validate_file_hash,
     validate_file_size,
 )
@@ -274,6 +277,16 @@ validate_file_hash_happy = [
     ),
 ]
 
+suffix_datetime_happy = [
+    (
+        dict(path=Path("/srv/work/test_document_01.pdf")),
+        dict(name="test_document_01_20230108_154025.pdf"),
+    ),
+    (
+        dict(path=Path("/srv/work/test manual 01.pdf")),
+        dict(name="test manual 01_20230108_154025.pdf"),
+    ),
+]
 
 # endregion: PyTest parametrized variables
 
@@ -366,3 +379,12 @@ class TestIOOps:
             result = validate_file_hash(**payload)
 
             assert result == expect["result"]
+
+    @pytest.mark.parametrize("payload, expect", suffix_datetime_happy)
+    def test_happy_suffix_datetime_happy(self, payload, expect):
+        with patch(f"{jt_snippets.io_ops.__name__}.datetime", wraps=datetime) as mock:
+            mock.now.return_value = datetime(2023, 1, 8, 15, 40, 25, 100000)
+
+            result = suffix_datetime(**payload)
+
+            assert result == expect["name"]
