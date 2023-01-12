@@ -120,19 +120,37 @@ def delete_directory(
         recursive: Recursively deletes child directories and its contents
     """
     # Deletes the only directory in the current directory
-    if not recursive and not len(list(path.iterdir())):
+    if all(
+        (
+            path.is_dir(),
+            not recursive,
+            not len(list(path.iterdir())),
+        ),
+    ):
         path.rmdir()
 
         return
 
     # Deletes only files in the current directory
-    if not recursive and len(list(path.iterdir())):
+    if all(
+        (
+            path.is_dir(),
+            not recursive,
+            len(list(path.iterdir())),
+        ),
+    ):
         [_path.unlink(missing_ok=True) for _path in path.iterdir() if _path.is_file()]
 
         return
 
     # Deletes both files and directory in the current directory recursivley
-    if recursive and len(list(path.iterdir())):
+    if all(
+        (
+            path.is_dir(),
+            recursive,
+            len(list(path.iterdir())),
+        )
+    ):
         for _path in path.glob("**"):
             if _path.is_file():
                 _path.unlink(missing_ok=True)

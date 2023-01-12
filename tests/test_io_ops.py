@@ -57,6 +57,7 @@ def mock_file(
     mock.is_dir.return_value = False
     mock.is_file.return_value = True
     mock.stat.return_value.st_size = st_size
+    mock.iterdir.side_effect = NotADirectoryError
     # mock.side_effect = side_effect() if side_effect else side_effect
 
     return mock
@@ -93,17 +94,17 @@ delete_directory_happy = [
 ]
 delete_directory_sad = [
     (
-        dict(path=mock_directory(False), recursive=True),
+        dict(path=Path("/srv/invalid"), recursive=True),
         dict(
-            exception_type=Exception,
-            exception_message=(f"Path doesn't exists."),
+            exception_type=FileNotFoundError,
+            exception_message="",
         ),
     ),
     (
-        dict(path=mock_file(True), recursive=True),
+        dict(path=Path("/srv/invalid"), recursive=True),
         dict(
             exception_type=Exception,
-            exception_message=(f"Path is not a directory"),
+            exception_message="",
         ),
     ),
 ]
@@ -130,7 +131,7 @@ list_directory_happy = [
 list_directory_sad = [
     (
         dict(
-            path=mock_directory(False),
+            path=Path("/srv/invalid"),
             is_file=False,
         ),
         dict(
@@ -144,18 +145,8 @@ list_directory_sad = [
             is_file=True,
         ),
         dict(
-            exception_type=Exception,
-            exception_message=(f"Path is not a directory."),
-        ),
-    ),
-    (
-        dict(
-            path=mock_file(True),
-            is_file=True,
-        ),
-        dict(
-            exception_type=Exception,
-            exception_message=(f"Path is not a directory."),
+            exception_type=NotADirectoryError,
+            exception_message="",
         ),
     ),
 ]
@@ -309,14 +300,18 @@ class TestIOOps:
             delete_directory(**payload)
 
             if payload.get("recursive") == True:
-                payload["path"].iterdir.assert_called_once()
+                payload["path"].iterdir.assert_called()
             else:
                 payload["path"].rmdir.assert_called()
 
-    # @pytest.mark.parametrize("payload, expect", delete_directory_sad)
-    # def test_sad_delete_directory(self, payload, expect):
-    #     with pytest.raises(expect["exception_type"], match=expect["exception_message"]):
-    #         delete_directory(**payload)
+    @pytest.mark.parametrize("payload, expect", delete_directory_sad)
+    def test_sad_delete_directory(self, payload, expect):
+        # with patch("pathlib.Path.iterdir") as mock:
+        #     mf = mock.return_value
+        #     mf.side_effect = FileNotFoundError
+
+        with pytest.raises(expect["exception_type"], match=expect["exception_message"]):
+            delete_directory(**payload)
 
     @pytest.mark.parametrize("payload", list_directory_happy)
     def test_happy_list_directory(self, payload):
@@ -338,12 +333,12 @@ class TestIOOps:
             for item in results:
                 assert item.is_file() or item.is_dir()
 
-    # @pytest.mark.parametrize("payload, expect", list_directory_sad)
-    # def test_sad_list_directory(self, payload, expect):
-    #     with pytest.raises(expect["exception_type"], match=expect["exception_message"]):
-    #         results = list_directory(**payload)
+    @pytest.mark.parametrize("payload, expect", list_directory_sad)
+    def test_sad_list_directory(self, payload, expect):
+        with pytest.raises(expect["exception_type"], match=expect["exception_message"]):
+            results = list_directory(**payload)
 
-    #         results = list(results)
+            results = list(results)
 
     @pytest.mark.parametrize("payload, expect", validate_file_size_happy)
     def test_happy_validate_file_size(self, payload, expect):
