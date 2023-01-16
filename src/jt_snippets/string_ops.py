@@ -1,5 +1,5 @@
 from datetime import date, datetime
-from typing import Union
+from typing import Optional, Union
 
 from .enums import GroupFormat
 
@@ -7,7 +7,7 @@ from .enums import GroupFormat
 def suffix_with_datetime(
     text: str,
     _datetime: Union[date, datetime],
-    group_format: GroupFormat,
+    group_format: GroupFormat = GroupFormat.SECOND,
 ) -> str:
     """
     Suffix text with date/time values
@@ -15,9 +15,12 @@ def suffix_with_datetime(
     Args:
         text: Text to apply date/time suffix
         _datetime: Object date/datetime to suffix text
-        group_format: Format of date/time suffix
+        group_format: Desired format of date/time suffix
     """
-    collections = [text]
+    collections = []
+
+    if text:
+        collections.append(text)
 
     if group_format.value == "SECOND":
         collections.append(_datetime.strftime(f"%Y%m%d_%H%M%S"))

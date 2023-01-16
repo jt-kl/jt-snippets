@@ -17,6 +17,16 @@ from jt_snippets.string_ops import suffix_with_datetime
 suffix_with_datetime_happy = [
     (
         dict(
+            text="",
+            _datetime=datetime(2023, 5, 11, 22, 5, 13),
+            group_format=GroupFormat.SECOND,
+        ),
+        dict(
+            result="20230511_220513",
+        ),
+    ),
+    (
+        dict(
             text="Hello_Mercury",
             _datetime=datetime(2023, 4, 27, 8, 19, 42),
             group_format=GroupFormat.SECOND,
@@ -75,7 +85,16 @@ suffix_with_datetime_happy = [
             result="Hello_Saturn_2023",
         ),
     ),
-    # -------------
+    (
+        dict(
+            text="",
+            _datetime=date(2023, 6, 28),
+            group_format=GroupFormat.SECOND,
+        ),
+        dict(
+            result="20230628_000000",
+        ),
+    ),
     (
         dict(
             text="Bye_Mercury",
