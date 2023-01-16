@@ -201,22 +201,3 @@ def generate_file_hash(
             hasher.update(chunk)
 
     return hasher.hexdigest()
-
-
-def suffix_datetime(
-    path: Path,
-) -> str:
-    """
-    Suffix date/time to given file name
-
-    Args:
-        path: Path to file to apply suffix
-    """
-    return "".join(
-        [
-            path.stem,
-            "_",
-            datetime.now().strftime(f"%Y%m%d_%H%M%S"),
-            "".join(path.suffixes),
-        ]
-    )
