@@ -1,0 +1,87 @@
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+
+name: "On-Premise Runner (Pre-Flight & Build)"
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    branches: [main]
+
+permissions:
+  contents: "read"
+
+env:
+  BASE_DATA_DIRECTORY: "/srv/data/"
+  BASE_SCRIPT_DIRECTORY: "/srv/scripts/"
+  BASE_STAGING_DIRECTORY: "/srv/staging/"
+  REPOSITORY_NAME: "jt_snippets"
+
+jobs:
+  preflight:
+    runs-on: ["self-hosted", "jthodt"]
+    steps:
+      - uses: "actions/checkout@v3"
+      - name: "Set Up Python v3.10.6"
+        uses: "actions/setup-python@v4"
+        with:
+          python-version: "3.10.6"
+      - name: "Deploy Artifacts"
+        id: "deploy_artifacts"
+        run: |
+          cd $GITHUB_WORKSPACE
+          echo -e "Current working directory: $(pwd)"
+          echo -e "--------- Directory Contents ---------\n"
+          ls -la
+          echo -e "\n--------- Directory Contents ---------"
+
+          echo -e -n "Copying artifacts..."
+          cp -r $GITHUB_WORKSPACE ${{ env.BASE_SCRIPT_DIRECTORY }}${{ env.REPOSITORY_NAME }}
+          echo -e "COMPLETED"
+  build:
+    needs: "preflight"
+    runs-on: ["self-hosted", "jthodt"]
+    steps:
+      - uses: "actions/checkout@v3"
+      - name: "Set Up Python v3.10.6"
+        uses: "actions/setup-python@v4"
+        with:
+          python-version: "3.10.6"
+      - name: "Build Environment"
+        id: "build_environment"
+        run: |
+          cd ${{ env.BASE_SCRIPT_DIRECTORY }}${{ env.REPOSITORY_NAME }}
+          echo -e "Current working directory: $(pwd)"
+        
+          echo -e "Create Python virtual environment started...\n"
+          python3 -m venv .env
+          source .env/bin/activate
+          python3 -m pip install --upgrade pip
+          echo -e "\nCreate Python virtual environment completed."
+          
+          echo -e "\nInstall package dependencies started...\n"
+          pip3 install wheel --no-cache-dir
+          if [ -f requirements.txt ]; then pip install -r requirements.txt --no-cache-dir; fi
+          if [ -d ./redist ]; then pip install ./redist/*; fi
+          pip3 install -e .
+          echo -e "\nInstall package dependencies completed."
+      - name: "Build Package"
+        id: "build_package"
+        run: |
+          if [[ ${{ steps.build_environment.outcome }} == "success" ]]
+          then
+            cd ${{ env.BASE_SCRIPT_DIRECTORY }}${{ env.REPOSITORY_NAME }}
+
+            echo -e "Build Python package started...\n"
+            python3 -m build
+            echo -e "\nBuild Python package completed."
+
+            exit 0
+
+          else:
+            exit 1
+          fi
+
+          
