@@ -41,7 +41,7 @@ jobs:
 
           if [ ! -d ${{ env.BASE_STAGING_DIRECTORY }}${{ env.REPOSITORY_NAME }} ]
           then
-            echo -e -n "\nCreate base directory started..."
+            echo -e -n "\nCreate staging directory started..."
             mkdir -p ${{ env.BASE_STAGING_DIRECTORY }}${{ env.REPOSITORY_NAME }};
             echo -e "COMPLETED"
           else
@@ -51,7 +51,7 @@ jobs:
           fi
 
           echo -e -n "\nCopying artifacts..."
-          cp -r $GITHUB_WORKSPACE ${{ env.BASE_STAGING_DIRECTORY }}${{ env.REPOSITORY_NAME }}
+          cp -r $GITHUB_WORKSPACE ${{ env.BASE_STAGING_DIRECTORY }}
           echo -e "COMPLETED"
       - name: "Install Package Dependencies"
         id: "install_packages"
