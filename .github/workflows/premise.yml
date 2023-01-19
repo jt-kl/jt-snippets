@@ -183,6 +183,7 @@ jobs:
             echo -e "Current working directory: $(pwd)"
 
             echo -e "Build Python package started...\n"
+            source .env/bin/activate
             python3 -m build
             echo -e "\nBuild Python package completed."
 
