@@ -46,12 +46,12 @@ jobs:
             echo -e "COMPLETED"
           else
             echo -e -n "\nPurging old artifacts..."
-            rm -rf ${{ env.BASE_STAGING_DIRECTORY }}${{ env.REPOSITORY_NAME }}
+            rm -rf ${{ env.BASE_STAGING_DIRECTORY }}${{ env.REPOSITORY_NAME }}/*
             echo -e "COMPLETED"
           fi
 
           echo -e -n "\nCopying artifacts..."
-          cp -r $GITHUB_WORKSPACE ${{ env.BASE_STAGING_DIRECTORY }}${{ env.REPOSITORY_NAME }}
+          cp -r $GITHUB_WORKSPACE/* ${{ env.BASE_STAGING_DIRECTORY }}${{ env.REPOSITORY_NAME }}
           echo -e "COMPLETED"
       - name: "Install Package Dependencies"
         id: "install_packages"
@@ -134,7 +134,7 @@ jobs:
           echo -e "\n--------- Directory Contents ---------"
 
           echo -e -n "Copying artifacts..."
-          cp -r $GITHUB_WORKSPACE ${{ env.BASE_SCRIPT_DIRECTORY }}${{ env.REPOSITORY_NAME }}
+          cp -r $GITHUB_WORKSPACE/* ${{ env.BASE_SCRIPT_DIRECTORY }}${{ env.REPOSITORY_NAME }}
           echo -e "COMPLETED"
   build:
     needs: "preflight"
