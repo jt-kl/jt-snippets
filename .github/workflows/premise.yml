@@ -133,6 +133,17 @@ jobs:
           ls -la
           echo -e "\n--------- Directory Contents ---------"
 
+          if [ ! -d ${{ env.BASE_SCRIPT_DIRECTORY }}${{ env.REPOSITORY_NAME }} ]
+          then
+            echo -e -n "\nCreate staging directory started..."
+            mkdir -p ${{ env.BASE_SCRIPT_DIRECTORY }}${{ env.REPOSITORY_NAME }};
+            echo -e "COMPLETED"
+          else
+            echo -e -n "\nPurging old artifacts..."
+            rm -rf ${{ env.BASE_SCRIPT_DIRECTORY }}${{ env.REPOSITORY_NAME }}/*
+            echo -e "COMPLETED"
+          fi
+
           echo -e -n "Copying artifacts..."
           cp -r $GITHUB_WORKSPACE/* ${{ env.BASE_SCRIPT_DIRECTORY }}${{ env.REPOSITORY_NAME }}
           echo -e "COMPLETED"
