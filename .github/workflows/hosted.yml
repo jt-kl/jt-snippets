@@ -17,7 +17,7 @@ env:
   BASE_DATA_DIRECTORY: "/srv/data/"
   BASE_SCRIPT_DIRECTORY: "/srv/scripts/"
   BASE_STAGING_DIRECTORY: "/srv/staging/"
-  REPOSITORY_NAME: "jt_snippets"
+  REPOSITORY_NAME: "jt-snippets"
 
 jobs:
   test:
