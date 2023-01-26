@@ -5,6 +5,34 @@ from sys import stdout
 from typing import Optional
 
 
+def add_rotating_file_handler(
+    logger,
+    directory: Path,
+    file: str = "application.log",
+    level: int = DEBUG,
+):
+    """
+    Add a RotatingFileHandler handler to logger
+
+    Args:
+        logger: Instance of logger
+        directory: Directory path to store log file
+        file: Name of log file
+        level: Logging level
+    """
+    log_format = Formatter("%(asctime)s|%(levelname)-8s|%(module)s:%(funcName)s:%(lineno)d - %(message)s")
+
+    rotating_file_handler = RotatingFileHandler(
+        directory.joinpath(file),
+        maxBytes=10485760,
+        backupCount=10,
+    )
+    rotating_file_handler.setLevel(level)
+    rotating_file_handler.setFormatter(log_format)
+
+    logger.addHandler(rotating_file_handler)
+
+
 def create_logger(
     name: Optional[str] = __name__,
     directory: Optional[Path] = None,
@@ -15,8 +43,10 @@ def create_logger(
     Create custom application logger
 
     Args:
-        path: Directory path to store log file
+        name: Name of logger
+        directory: Directory path to store log file
         file: Name of log file
+        level: Logging level
     """
     logger = getLogger(name)
     logger.setLevel(level)
