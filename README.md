@@ -1,7 +1,7 @@
 # jt-snippets
 
 <!-- ![build](https://github.com/jt-kl/jt-snippets/actions/workflows/build.yml/badge.svg) -->
-![tests](https://github.com/jt-kl/jt-snippets/actions/workflows/tests.yml/badge.svg)
+![tests](https://github.com/jt-kl/jt-snippets/actions/workflows/hosted.yml/badge.svg)
 ![coverage](./tests/coverage.svg)
 
 The following project contains helper functions/methods to complement your Python code
