@@ -22,8 +22,59 @@ The following project contains helper functions/methods to complement your Pytho
 
 Requirements to use the library:
 
-1. Python v3.10.6
-2. PIP v22.2.2
+1. Python v3.10.6 or greater
+2. PIP v22.3.1 or greater
+
+## Development
+
+Clone the repository and setup your environment for development
+
+_Linux (Ubuntu/Debian)_
+
+```shell
+#!/bin/bash
+# Create a Python virtual environment
+
+$ cd snippets
+$ python3 -m venv .env
+$ source .env/bin/activate
+
+# Install library dependencies
+
+$ pip3 install wheel --no-cache-dir
+$ pip3 install -r requirements.txt --no-cache-dir
+$ pip3 install redist/*
+$ pip3 install -e .
+```
+
+## Linting & Testing
+
+```shell
+#!/bin/bash
+# Create a Python virtual environment
+
+$ cd jt-snippets
+$ python3 -m venv .env
+$ source .env/bin/activate
+
+# Install library dependencies
+
+$ pip3 install wheel --no-cache-dir
+$ pip3 install -r requirements.txt --no-cache-dir
+$ pip3 install redist/*
+$ pip3 install -e .
+
+# Execute linting
+
+$ clear; flake8 --count --statistics  --exclude=.env --ignore=F821,F541,E501 --max-complexity=10
+$ clear; flake8 --count --show-source --statistics  --exclude=.env --ignore=F821,F541,E501 --max-complexity=10
+
+# Execute testing
+
+pytest -vvv --cov-report=term-missing --cov=jt-snippets
+```
+
+
 
 ## Build & Distribute
 
@@ -42,10 +93,10 @@ $ source .env/bin/activate
 $ pip3 install wheel --no-cache-dir
 $ pip3 install -r requirements.txt --no-cache-dir
 $ pip3 install redist/*
+$ pip3 install -e .
 
-# Build the wheel file and on completion, distribute the wheel file 
-# located in the "dist" directory. The "build" and/or "dist" 
-# directory can be safely removed
+# Build the wheel file and on completion, distribute the wheel file located in
+# the "dist" directory. The "build" and "dist" directory can be safely removed
 
 $ python3 upgrade.py <options>
 $ python3 -m build
@@ -55,49 +106,3 @@ $ python3 -m build
 $ coverage-badge -o ./tests/coverage.svg
 ```
 
-
-## Linting
-
-```shell
-#!/bin/bash
-# Create a Python virtual environment
-
-$ cd jt-snippets
-$ python3 -m venv .env
-$ source .env/bin/activate
-
-# Install library dependencies
-
-$ pip3 install wheel --no-cache-dir
-$ pip3 install -r requirements.txt --no-cache-dir
-$ pip3 install redist/*
-$ pip3 install -e .
-
-# Run linting
-
-$ clear; flake8 --count --statistics  --exclude=.env --ignore=F821,F541,E501 --max-complexity=10
-$ clear; flake8 --count --show-source --statistics  --exclude=.env --ignore=F821,F541,E501 --max-complexity=10
-```
-
-
-
-## Testing
-
-```shell
-#!/bin/bash
-# Create a Python virtual environment
-
-$ cd jt-snippets
-$ python3 -m venv .env
-$ source .env/bin/activate
-
-# Install library dependencies
-
-$ pip3 install wheel --no-cache-dir
-$ pip3 install -r requirements.txt --no-cache-dir
-$ pip3 install redist/*
-$ pip3 install -e .
-
-# Execute tests
-pytest -vvv --cov-report=term-missing --cov=jt_snippets
-```

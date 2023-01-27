@@ -1,8 +1,8 @@
 ## Getting Started - Tests
-![tests](https://github.com/jt-kl/jt-snippets/actions/workflows/tests.yml/badge.svg)
+![tests](https://github.com/jt-kl/jt-snippets/actions/workflows/hosted.yml/badge.svg)
 ![coverage](./coverage.svg)
 
-Setup your Python virtual environment with the corresponding dependant libraries and run the tests by using the following BASH commands:
+## Linting & Testing
 
 ```shell
 #!/bin/bash
@@ -16,8 +16,15 @@ $ source .env/bin/activate
 
 $ pip3 install wheel --no-cache-dir
 $ pip3 install -r requirements.txt --no-cache-dir
+$ pip3 install redist/*
 $ pip3 install -e .
 
-# Execute tests
-pytest -vvv --cov-report=term-missing --cov=jt_snippets
+# Execute linting
+
+$ clear; flake8 --count --statistics  --exclude=.env --ignore=F821,F541,E501 --max-complexity=10
+$ clear; flake8 --count --show-source --statistics  --exclude=.env --ignore=F821,F541,E501 --max-complexity=10
+
+# Execute testing
+
+pytest -vvv --cov-report=term-missing --cov=jt-snippets
 ```
