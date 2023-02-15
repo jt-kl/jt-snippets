@@ -3,6 +3,7 @@ from collections.abc import Iterator
 from datetime import datetime
 from pathlib import Path
 from typing import Optional, Union
+from zipfile import ZIP_DEFLATED, ZipFile
 
 # region: Validators
 
@@ -201,3 +202,37 @@ def generate_file_hash(
             hasher.update(chunk)
 
     return hasher.hexdigest()
+
+
+def archive_items(
+    source: Path,
+    destination: Path,
+    validate: bool = True,
+):
+    """
+    Archive items into a ZIP file
+
+    Args:
+        source: Source item to archive (Directory/File)
+        destination: Destination to output archive file
+    """
+    paths = list()
+
+    if source.is_file():
+        paths.append(source)
+
+    if source.is_dir():
+        paths = [i for i in sorted(source.rglob("*"))]
+
+    with ZipFile(destination, "w") as archive:
+        for i in paths:
+            archive.write(
+                filename=i,
+                arcname=i.relative_to(source.parent),
+                compress_type=ZIP_DEFLATED,
+            )
+
+    if validate:
+        with ZipFile(destination, "r") as archive:
+            if archive.testzip():
+                raise Exception(f"Invalid archive")
