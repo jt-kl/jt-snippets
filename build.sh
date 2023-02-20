@@ -5,9 +5,15 @@ clear
 
 source .env/bin/activate
 
+python3 -m pip install --upgrade pip
+
 pip3 install wheel --no-cache-dir
 pip3 install -r requirements.txt --no-cache-dir
-pip3 install redist/*
+
+if [ -d "./redist/*" ]; then
+    pip3 install ./redist/*
+fi
+
 pip3 install -e .
 
 python3 -m build
