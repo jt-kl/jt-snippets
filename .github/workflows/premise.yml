@@ -43,16 +43,16 @@ jobs:
           then
             echo -e -n "\nCreate staging directory started..."
             mkdir -p ${{ env.BASE_STAGING_DIRECTORY }}${{ env.REPOSITORY_NAME }};
-            echo -e "COMPLETED"
+            echo -e "${{ vars.GreenText}}COMPLETED${{ vars.ResetText }}"
           else
             echo -e -n "\nPurging old artifacts..."
             rm -rf ${{ env.BASE_STAGING_DIRECTORY }}${{ env.REPOSITORY_NAME }}/*
-            echo -e "COMPLETED"
+            echo -e "${{ vars.GreenText}}COMPLETED${{ vars.ResetText }}"
           fi
 
           echo -e -n "\nCopying artifacts..."
           cp -r $GITHUB_WORKSPACE/* ${{ env.BASE_STAGING_DIRECTORY }}${{ env.REPOSITORY_NAME }}
-          echo -e "COMPLETED"
+          echo -e "${{ vars.GreenText}}COMPLETED${{ vars.ResetText }}"
       - name: "Install Package Dependencies"
         id: "install_packages"
         run: |
@@ -137,16 +137,16 @@ jobs:
           then
             echo -e -n "\nCreate staging directory started..."
             mkdir -p ${{ env.BASE_SCRIPT_DIRECTORY }}${{ env.REPOSITORY_NAME }};
-            echo -e "COMPLETED"
+            echo -e "${{ vars.GreenText}}COMPLETED${{ vars.ResetText }}"
           else
             echo -e -n "\nPurging old artifacts..."
             rm -rf ${{ env.BASE_SCRIPT_DIRECTORY }}${{ env.REPOSITORY_NAME }}/*
-            echo -e "COMPLETED"
+            echo -e "${{ vars.GreenText}}COMPLETED${{ vars.ResetText }}"
           fi
 
           echo -e -n "Copying artifacts..."
           cp -r $GITHUB_WORKSPACE/* ${{ env.BASE_SCRIPT_DIRECTORY }}${{ env.REPOSITORY_NAME }}
-          echo -e "COMPLETED"
+          echo -e "${{ vars.GreenText}}COMPLETED${{ vars.ResetText }}"
   build:
     needs: "preflight"
     runs-on: ["self-hosted", "jthodt"]
