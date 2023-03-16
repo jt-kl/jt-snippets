@@ -32,3 +32,6 @@ echo ~/_JT/jt-gwapiis/redist
 
 cp "$file" ~/_JT/jt-scaffolding/redist
 echo ~/_JT/jt-scaffolding/redist
+
+cp "$file" ~/_JT/jt-vultr/redist
+echo ~/_JT/jt-vultr/redist
