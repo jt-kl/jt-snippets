@@ -1,0 +1,59 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Python: File",
+      "type": "python",
+      "request": "launch",
+      "program": "${file}",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "args": [],
+      "justMyCode": true
+    },
+    {
+      "name": "Python: File (Build)",
+      "type": "python",
+      "request": "launch",
+      "program": "${file}",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "args": [
+        "--minor",
+        "--build",
+        "--prerelease",
+      ],
+      "justMyCode": true
+    },
+    {
+      "name": "PyTest (Debug - No/Coverage)",
+      "type": "python",
+      "request": "launch",
+      "module": "pytest",
+      "env": {},
+      "args": ["--no-cov", "-vvv", "-s"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "openOnSessionStart",
+      "purpose": ["debug-test"],
+      "redirectOutput": true
+    },
+    {
+      "name": "PyTest (With/Coverage)",
+      "type": "python",
+      "request": "launch",
+      "module": "pytest",
+      "env": {},
+      //   "args": [],
+      "args": ["--cov-report=term-missing", "--cov=trading_app", "-vvv", "-s"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "openOnSessionStart",
+      "purpose": ["debug-test"],
+      "redirectOutput": true
+    }
+  ]
+}

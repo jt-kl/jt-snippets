@@ -134,6 +134,3 @@ dmypy.json
 **/temp
 **/data
 **/logs
-
-# VSCode directories
-.vscode
