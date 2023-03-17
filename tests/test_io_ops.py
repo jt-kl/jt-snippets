@@ -14,6 +14,8 @@ from jt_snippets.io_ops import (
     list_directory,
     validate_file_hash,
     validate_file_size,
+    validate_is_directory,
+    validate_is_file,
 )
 
 # region: Helper methods

@@ -1,10 +1,11 @@
 from datetime import date, datetime
+from typing import Any
 from unittest.mock import patch
 
 import pytest
 
 from jt_snippets.enums import GroupFormat
-from jt_snippets.string_ops import suffix_with_datetime
+from jt_snippets.string_ops import pretty_print, suffix_with_datetime
 
 # region: Helper methods
 # endregion: Helper methods
@@ -14,7 +15,7 @@ from jt_snippets.string_ops import suffix_with_datetime
 
 # region: PyTest parametrized variables
 
-suffix_with_datetime_happy = [
+suffix_with_datetime_happy: list[Any] = [
     (
         dict(
             text="",
@@ -157,6 +158,35 @@ suffix_with_datetime_happy = [
     ),
 ]
 
+pretty_print_happy: list[Any] = [
+    (
+        {
+            "content": {
+                "id": "VYxa3asuAXq2gpxhFghmDtmzHrZtS9bm",
+                "result": "deployed",
+            },
+            "width": 1000,
+        },
+        {},
+    ),
+    (
+        {
+            "content": {
+                "id": "zx7ZyohQymqwFaMXF4wyg3xyRDL3xCd7",
+                "result": "pending",
+            },
+            "width": 200,
+        },
+        {},
+    ),
+    (
+        {
+            "content": "deployed",
+            "width": 200,
+        },
+        {},
+    ),
+]
 
 # endregion: PyTest parametrized variables
 
@@ -167,3 +197,15 @@ class TestStringOps:
         result = suffix_with_datetime(**payload)
 
         assert result == expect["result"]
+
+    @patch("builtins.print")
+    @patch("pprint.PrettyPrinter.pprint")
+    @patch("json.dumps")
+    @pytest.mark.parametrize("payload, expect", pretty_print_happy)
+    def test_happy_pretty_print(self, mocked_print_func, mocked_pprint_func, mocked_dumps_func, payload, expect):
+        pretty_print(**payload)
+
+        if isinstance(payload["content"], dict):
+            mocked_dumps_func.assert_called()
+        else:
+            mocked_pprint_func.assert_called()

@@ -9,6 +9,7 @@ from jt_snippets.validator_ops import validate_count_range
 # endregion: Mocked resources
 
 # region: PyTest parametrized variables
+
 validate_count_range_happy = [
     (
         dict(

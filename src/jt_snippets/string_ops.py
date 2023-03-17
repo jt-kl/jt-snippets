@@ -1,5 +1,7 @@
 from datetime import date, datetime
-from typing import Optional, Union
+from json import dumps
+from pprint import PrettyPrinter
+from typing import Any, Union
 
 from .enums import GroupFormat
 
@@ -36,3 +38,25 @@ def suffix_with_datetime(
         collections.append(_datetime.strftime(f"%Y"))
 
     return "_".join(collections)
+
+
+def pretty_print(
+    content: Union[dict[str, Any], str],
+    width: int = 5000,
+):
+    """
+    Pretty print content
+
+    Args:
+        content: Content to pretty print
+        width: Maximum line width before wrapping
+    """
+    pp = PrettyPrinter(
+        indent=2,
+        width=width,
+    )
+
+    if isinstance(content, dict):
+        print(dumps(content))
+    else:
+        pp.pprint(content)
