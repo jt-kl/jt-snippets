@@ -83,7 +83,7 @@ def main(
                 confirmed = True
 
                 REFERENCE_FILE.write_text(str(_version))
-                MODULE_FILE.write_text(f'VERSION = "{str(_version)}"')
+                MODULE_FILE.write_text(f'VERSION = "{str(_version)}"\n')
 
                 break
             else:
