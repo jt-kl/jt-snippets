@@ -43,11 +43,11 @@ def main(
     _version = VersionInfo.parse(text)
 
     conditions = [
-        major == False,
-        minor == False,
-        patch == False,
-        prerelease == False,
-        build == False,
+        major is False,
+        minor is False,
+        patch is False,
+        prerelease is False,
+        build is False,
     ]
 
     if all(conditions):
