@@ -140,9 +140,13 @@ def to_dictionary(
 
         return data
 
+    elif isinstance(_object, dict):
+        return _object
+
     # Accounts for list of simple native objects: strings, integers, floats
     # and decimals
     conditions = (
+        isinstance(_object, dict),
         isinstance(_object, str),
         isinstance(_object, int),
         isinstance(_object, float),
