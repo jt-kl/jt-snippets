@@ -1,5 +1,6 @@
 from datetime import date, datetime
 from json import dumps
+from os import system
 from pprint import PrettyPrinter
 from typing import Any, Union
 
@@ -43,6 +44,7 @@ def suffix_with_datetime(
 def pretty_print(
     content: Union[dict[str, Any], str],
     width: int = 5000,
+    clear: bool = False,
 ):
     """
     Pretty print content
@@ -50,7 +52,11 @@ def pretty_print(
     Args:
         content: Content to pretty print
         width: Maximum line width before wrapping
+        clear: Clears stdout before printing
     """
+    if clear:
+        system("clear")
+
     pp = PrettyPrinter(
         indent=2,
         width=width,

@@ -166,6 +166,7 @@ pretty_print_happy: list[Any] = [
                 "result": "deployed",
             },
             "width": 1000,
+            "clear": True,
         },
         {},
     ),
@@ -193,19 +194,23 @@ pretty_print_happy: list[Any] = [
 
 class TestStringOps:
     @pytest.mark.parametrize("payload, expect", suffix_with_datetime_happy)
-    def test_happy_suffix_with_datetime(self, payload, expect):
+    @patch("os.system")
+    def test_happy_suffix_with_datetime(self, mocked_func, payload, expect):
         result = suffix_with_datetime(**payload)
 
         assert result == expect["result"]
 
-    @patch("builtins.print")
-    @patch("pprint.PrettyPrinter.pprint")
-    @patch("json.dumps")
     @pytest.mark.parametrize("payload, expect", pretty_print_happy)
-    def test_happy_pretty_print(self, mocked_print_func, mocked_pprint_func, mocked_dumps_func, payload, expect):
+    @patch("builtins.print")
+    @patch("jt_snippets.string_ops.PrettyPrinter.pprint")
+    @patch("jt_snippets.string_ops.system")
+    def test_happy_pretty_print(self, mocked_system_func, mocked_pprint_func, mocked_print_func, payload, expect):
         pretty_print(**payload)
 
+        if payload.get("clear"):
+            mocked_system_func.assert_called()
+
         if isinstance(payload["content"], dict):
-            mocked_dumps_func.assert_called()
+            mocked_print_func.assert_called()
         else:
             mocked_pprint_func.assert_called()
