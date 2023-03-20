@@ -147,6 +147,7 @@ def to_dictionary(
     # and decimals
     conditions = (
         isinstance(_object, dict),
+        isinstance(_object, list),
         isinstance(_object, str),
         isinstance(_object, int),
         isinstance(_object, float),
