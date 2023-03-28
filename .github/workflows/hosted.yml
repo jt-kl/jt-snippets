@@ -4,9 +4,9 @@ name: "Hosted Runner (Test)"
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
   workflow_dispatch:
     branches: [main]
 
@@ -48,7 +48,7 @@ jobs:
           # stop the build if there are Python syntax errors or undefined names
           flake8 . --count --show-source --statistics --max-complexity=10 --exclude=.env --ignore=F821,F541,E501 --select=E9,F63,F7,F82 
           # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-          flake8 . --count --exit-zero --statistics --max-complexity=10 --max-line-length=127 
+          flake8 . --count --exit-zero --statistics --max-complexity=10 --max-line-length=127 --exclude=.env
       - name: "Invoke Tests"
         run: |
           pytest -vvv --cov-report=term-missing --cov=${{ env.REPOSITORY_NAME }}

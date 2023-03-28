@@ -48,6 +48,10 @@ jobs:
             echo -e -n "\nPurging old artifacts..."
             rm -rf ${{ env.BASE_STAGING_DIRECTORY }}${{ env.REPOSITORY_NAME }}/*
             echo -e "${{ vars.GreenText}}COMPLETED${{ vars.ResetText }}"
+
+            echo -e -n "\nPurging old virtual environment..."
+            rm -rf ${{ env.BASE_STAGING_DIRECTORY }}${{ env.REPOSITORY_NAME }}/.env
+            echo -e "${{ vars.GreenText}}COMPLETED${{ vars.ResetText }}"
           fi
 
           echo -e -n "\nCopying artifacts..."
@@ -91,7 +95,7 @@ jobs:
             # stop the build if there are Python syntax errors or undefined names
             flake8 . --count --show-source --statistics --max-complexity=10 --exclude=.env --ignore=F821,F541,E501 --select=E9,F63,F7,F82 
             # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-            flake8 . --count --exit-zero --statistics --max-complexity=10 --max-line-length=127 
+            flake8 . --count --exit-zero --statistics --max-complexity=10 --max-line-length=127 --exclude=.env
             
             exit 0
           else
@@ -110,7 +114,7 @@ jobs:
             pytest -vvv --cov-report=term-missing --cov=${{ env.REPOSITORY_NAME }}
             # Manually execute tests locally and generate a coverage badge
             # coverage-badge -o ./tests/coverage.svg
-          
+
             exit 0
           else
             exit 1
@@ -142,6 +146,10 @@ jobs:
             echo -e -n "\nPurging old artifacts..."
             rm -rf ${{ env.BASE_SCRIPT_DIRECTORY }}${{ env.REPOSITORY_NAME }}/*
             echo -e "${{ vars.GreenText}}COMPLETED${{ vars.ResetText }}"
+
+            echo -e -n "\nPurging old virtual environment..."
+            rm -rf ${{ env.BASE_SCRIPT_DIRECTORY }}${{ env.REPOSITORY_NAME }}/.env
+            echo -e "${{ vars.GreenText}}COMPLETED${{ vars.ResetText }}"
           fi
 
           echo -e -n "Copying artifacts..."
@@ -161,13 +169,13 @@ jobs:
         run: |
           cd ${{ env.BASE_SCRIPT_DIRECTORY }}${{ env.REPOSITORY_NAME }}
           echo -e "Current working directory: $(pwd)"
-        
+
           echo -e "Create Python virtual environment started...\n"
           python3 -m venv .env
           source .env/bin/activate
           python3 -m pip install --upgrade pip
           echo -e "\nCreate Python virtual environment completed."
-          
+
           echo -e "\nInstall package dependencies started...\n"
           pip3 install wheel --no-cache-dir
           if [ -f requirements.txt ]; then pip install -r requirements.txt --no-cache-dir; fi
@@ -192,5 +200,3 @@ jobs:
           else:
             exit 1
           fi
-
-          
