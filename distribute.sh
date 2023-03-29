@@ -35,3 +35,6 @@ echo ~/_JT/jt-scaffolding/redist
 
 cp "$file" ~/_JT/jt-vultr/redist
 echo ~/_JT/jt-vultr/redist
+
+cp "$file" ~/_AV/avsb-automations/redist
+echo ~/_AV/avsb-automations/redist
