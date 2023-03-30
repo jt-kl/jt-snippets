@@ -1,5 +1,3 @@
-import pytest
-
 from jt_snippets.models import URLParts
 
 # region: Helper methods

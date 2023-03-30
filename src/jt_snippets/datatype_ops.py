@@ -68,7 +68,7 @@ def is_compound_reserved(
 
 def dictionary_factory(
     data: list[tuple[str, Any]],
-) -> dict:
+) -> dict[str, Any]:
     """
     Conversion factory for dataclasses.asdict()
 

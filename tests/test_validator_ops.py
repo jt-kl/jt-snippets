@@ -86,4 +86,4 @@ class TestValidatorOps:
     @pytest.mark.parametrize("payload, expect", validate_count_range_sad)
     def test_sad_validate_count_range(self, payload, expect):
         with pytest.raises(expect["exception_type"], match=expect["exception_message"]):
-            result = validate_count_range(**payload)
+            validate_count_range(**payload)

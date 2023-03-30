@@ -2,13 +2,13 @@ import shutil
 from csv import DictReader, DictWriter
 from pathlib import Path
 from tempfile import NamedTemporaryFile
-from typing import Iterator, Union
+from typing import Any, Iterator, Union
 
 
 def update_csv_file(
     path: Path,
     fields: list[str],
-    records: Union[list[dict], Iterator[dict]],
+    records: Union[list[dict[str, Any]], Iterator[dict[str, Any]]],
     header: bool = False,
 ):
     """
@@ -55,7 +55,7 @@ def read_csv_file(
     header: bool = False,
     delimiter: str = ",",
     **kwargs,
-) -> Iterator:
+) -> Iterator[Any]:
     """
     Read CSV file.
 
@@ -82,8 +82,8 @@ def read_csv_file(
 
 def write_csv_file(
     path: Path,
-    field_names: list,
-    rows: Union[list[dict], Iterator[dict]],
+    field_names: list[Any],
+    rows: Union[list[dict[str, Any]], Iterator[dict[str, Any]]],
     header: bool = True,
     **kwargs,
 ):

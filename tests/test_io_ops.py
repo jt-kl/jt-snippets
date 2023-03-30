@@ -1,21 +1,18 @@
 from collections.abc import Iterator
-from datetime import datetime
 from pathlib import Path
 from typing import Callable, Optional
 from unittest.mock import Mock, mock_open, patch
 
 import pytest
 
-import jt_snippets.io_ops
-from jt_snippets.io_ops import (
+# import jt_snippets.io_ops
+from jt_snippets.io_ops import (  # validate_is_directory,; validate_is_file,
     create_directories,
     delete_directory,
     generate_file_hash,
     list_directory,
     validate_file_hash,
     validate_file_size,
-    validate_is_directory,
-    validate_is_file,
 )
 
 # region: Helper methods
@@ -287,10 +284,10 @@ class TestIOOps:
 
     @pytest.mark.parametrize("payload", delete_directory_happy)
     def test_happy_delete_directory(self, payload):
-        with patch("pathlib.Path.iterdir", return_value=mock_files(3)) as mock:
+        with patch("pathlib.Path.iterdir", return_value=mock_files(3)):
             delete_directory(**payload)
 
-            if payload.get("recursive") == True:
+            if payload.get("recursive") is True:
                 payload["path"].iterdir.assert_called()
             else:
                 payload["path"].rmdir.assert_called()
@@ -312,11 +309,11 @@ class TestIOOps:
 
         results = list(results)
 
-        if payload.get("is_file") == True:
+        if payload.get("is_file") is True:
             for item in results:
                 assert item.is_file()
 
-        elif payload.get("is_file") == False:
+        elif payload.get("is_file") is False:
             for item in results:
                 assert item.is_dir()
 
@@ -340,13 +337,13 @@ class TestIOOps:
     @pytest.mark.parametrize("payload, expect", validate_file_size_sad)
     def test_sad_validate_file_size(self, payload, expect):
         with pytest.raises(expect["exception_type"], match=expect["exception_message"]):
-            results = validate_file_size(**payload)
+            validate_file_size(**payload)
 
     @pytest.mark.parametrize("payload, expect", generate_file_hash_happy)
     def test_happy_generate_file_hash(self, payload, expect):
         text = payload.pop("text").encode("utf-8")
 
-        with patch("builtins.open", mock_open(read_data=text)) as mocked_file:
+        with patch("builtins.open", mock_open(read_data=text)):
             result = generate_file_hash(**payload)
 
             assert result == expect["result"]
@@ -358,20 +355,20 @@ class TestIOOps:
         if text:
             with patch("builtins.open", mock_open(read_data=text)) as mocked_file:
                 with pytest.raises(expect["exception_type"], match=expect["exception_message"]):
-                    result = generate_file_hash(**payload)
+                    generate_file_hash(**payload)
         else:
             with patch("builtins.open", new_callable=mock_open) as mocked_file:
                 mf = mocked_file.return_value
                 mf.read.side_effect = IsADirectoryError
 
                 with pytest.raises(expect["exception_type"], match=expect["exception_message"]):
-                    result = generate_file_hash(**payload)
+                    generate_file_hash(**payload)
 
     @pytest.mark.parametrize("payload, expect", validate_file_hash_happy)
     def test_happy_validate_file_hash(self, payload, expect):
         text = payload.pop("text").encode("utf-8")
 
-        with patch("builtins.open", mock_open(read_data=text)) as mocked_file:
+        with patch("builtins.open", mock_open(read_data=text)):
             result = validate_file_hash(**payload)
 
             assert result == expect["result"]

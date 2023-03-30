@@ -1,8 +1,7 @@
 import hashlib
 from collections.abc import Iterator
-from datetime import datetime
 from pathlib import Path
-from typing import Optional, Union
+from typing import Any, Optional
 from zipfile import ZIP_DEFLATED, ZipFile
 
 # region: Validators
@@ -99,14 +98,12 @@ def create_directories(
     Args:
         paths: Collection of directory paths to be created
     """
-    [
+    for path in paths:
         path.mkdir(
             parents=True,
             exist_ok=True,
             **kwargs,
         )
-        for path in paths
-    ]
 
 
 def delete_directory(
@@ -140,7 +137,9 @@ def delete_directory(
             len(list(path.iterdir())),
         ),
     ):
-        [_path.unlink(missing_ok=True) for _path in path.iterdir() if _path.is_file()]
+        for _path in path.iterdir():
+            if _path.is_file():
+                _path.unlink(missing_ok=True)
 
         return
 
@@ -163,7 +162,7 @@ def delete_directory(
 def list_directory(
     path: Path,
     is_file: Optional[bool] = None,
-) -> Iterator:
+) -> Iterator[Any]:
     """
     Helper method to list contents of a directory
 

@@ -1,10 +1,10 @@
 from functools import wraps
 from time import sleep, time
-from typing import Callable
+from typing import Any, Callable
 
 
 def exponential_backoff(
-    func: Callable,
+    func: Callable[[Any], Any],
     attempts: int = 5,
 ):
     """
@@ -29,7 +29,7 @@ def exponential_backoff(
 
 
 def code_execution_timer(
-    func: Callable,
+    func: Callable[[Any], Any],
 ):
     """
     Function decorator to calculate execution duration of code block.
