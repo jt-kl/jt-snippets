@@ -1,6 +1,6 @@
 [flake8]
 count = True
-exclude = .env,redist,dist,src/jt_snippets/__init__.py
+exclude = .env,.tox,redist,dist,src/jt_snippets/__init__.py
 extend-ignore = E501,F541,C901
 show-source = False
 statistics = True
