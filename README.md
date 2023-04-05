@@ -1,6 +1,7 @@
 # jt-snippets
 
 <!-- ![build](https://github.com/jt-kl/jt-snippets/actions/workflows/build.yml/badge.svg) -->
+
 ![tests](https://github.com/jt-kl/jt-snippets/actions/workflows/hosted.yml/badge.svg)
 ![coverage](./tests/coverage.svg)
 
@@ -67,14 +68,19 @@ $ pip3 install -e .
 # Execute linting
 
 $ clear; flake8 --count --statistics  --exclude=.env --ignore=F821,F541,E501 --max-complexity=10
-$ clear; flake8 --count --show-source --statistics  --exclude=.env --ignore=F821,F541,E501 --max-complexity=10
 
 # Execute testing
 
-pytest -vvv --cov-report=term-missing --cov=jt-snippets
+$ clear; pytest -vvv --cov-report=term-missing --cov=jt-snippets
+
+# Execute multiple version testing
+
+$ clear; tox
+
+# Type checking
+
+$ clear; mypy ./src
 ```
-
-
 
 ## Build & Distribute
 
@@ -99,10 +105,9 @@ $ pip3 install -e .
 # the "dist" directory. The "build" and "dist" directory can be safely removed
 
 $ python3 upgrade.py <options>
-$ python3 -m build
+$ bash build.sh
 
-# Manually execute tests locally and generate a coverage badge and 
+# Manually execute tests locally and generate a coverage badge and
 # check it into the repository
-$ coverage-badge -o ./tests/coverage.svg
+$ clear; coverage-badge -o ./tests/coverage.svg
 ```
-
