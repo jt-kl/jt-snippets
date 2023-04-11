@@ -4,6 +4,8 @@ from pathlib import Path
 from typing import Any, Optional
 from zipfile import ZIP_DEFLATED, ZipFile
 
+from jt_snippets import logger
+
 # region: Validators
 
 
@@ -225,6 +227,7 @@ def archive_items(
 
     with ZipFile(destination, "w") as archive:
         for i in paths:
+            logger.info(f"Archiving: {i}")
             archive.write(
                 filename=i,
                 arcname=i.relative_to(source.parent),
