@@ -22,8 +22,11 @@ def create_console_stream_handler(
     console_stream_handler.setLevel(level)
 
     if format:
+        log_format = Formatter(format)
+    else:
         log_format = Formatter("%(asctime)s|%(levelname)-8s|%(module)s:%(funcName)s:%(lineno)d - %(message)s")
-        console_stream_handler.setFormatter(log_format)
+
+    console_stream_handler.setFormatter(log_format)
 
     return console_stream_handler
 
@@ -49,8 +52,11 @@ def create_syslog_handler(
     syslog_handler.setLevel(level)
 
     if format:
+        log_format = Formatter(format)
+    else:
         log_format = Formatter("%(asctime)s|%(levelname)-8s|%(module)s:%(funcName)s:%(lineno)d - %(message)s")
-        syslog_handler.setFormatter(log_format)
+
+    syslog_handler.setFormatter(log_format)
 
     return syslog_handler
 
@@ -84,8 +90,11 @@ def create_rotating_file_handler(
     rotating_file_handler.setLevel(level)
 
     if format:
+        log_format = Formatter(format)
+    else:
         log_format = Formatter("%(asctime)s|%(levelname)-8s|%(module)s:%(funcName)s:%(lineno)d - %(message)s")
-        rotating_file_handler.setFormatter(log_format)
+
+    rotating_file_handler.setFormatter(log_format)
 
     return rotating_file_handler
 
