@@ -1,7 +1,7 @@
 from datetime import date, datetime
-from decimal import Decimal
+from decimal import ROUND_05UP, Context, Decimal, getcontext, setcontext
 from enum import Enum
-from typing import Any, Union
+from typing import Any, Optional, Union
 
 
 def is_compound_reserved(
@@ -162,6 +162,7 @@ def to_dictionary(
 
 def to_decimal(
     value: Union[str, float, int],
+    places: int = 2,
 ) -> Decimal:
     """
     Converts the following object types below to Decimal
@@ -171,11 +172,14 @@ def to_decimal(
 
     Args:
         value: Value to be converted
+        places: Format values with required decimal places
 
     Example:
         to_decimal(3.142)
         to_decimal(1,432,423.31)
     """
+    exponent = Decimal("10") ** -abs(places)
+
     if isinstance(value, float):
         value = str(value)
 
@@ -189,7 +193,7 @@ def to_decimal(
     for character, replacement in [(",", "")]:
         value = value.replace(character, replacement)
 
-    return Decimal(value)
+    return Decimal(value).quantize(exponent)
 
 
 def prettify_json():
