@@ -1,3 +1,29 @@
+import time
+from functools import wraps
+
+
+def execution_timer():
+    """
+    Function decorator to calculate runtime duration of a method/function.
+    """
+
+    def log_wrapper(func):
+        @wraps(func)
+        def func_wrapper(*args, **kwargs):
+            start_time = time.time()
+            result = func(*args, **kwargs)
+            end_time = time.time()
+
+            duration = (end_time - start_time) * 1000  # Convert to milliseconds
+            print(f"Total Runtime: {duration}")
+
+            return result
+
+        return func_wrapper
+
+    return log_wrapper
+
+
 def progress_bar_callback(
     size: int,
     completed: int,
