@@ -38,3 +38,6 @@ echo ~/_JT/jt-vultr/redist
 
 cp "$file" ~/_AV/avsb-automations/redist
 echo ~/_AV/avsb-automations/redist
+
+cp "$file" ~/_JT/jt-trading-brokers/redist
+echo ~/_JT/jt-trading-brokers/redist
