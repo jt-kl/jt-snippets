@@ -1,7 +1,8 @@
 from logging import INFO, Formatter, StreamHandler, getLogger
 from sys import stdout
 
-from ._version import VERSION
+VERSION = "1.0.8+build.1"
+
 
 log_format = Formatter("%(asctime)s|%(levelname)-8s|%(module)s:%(funcName)s:%(lineno)d - %(message)s")
 

@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.10.6
+#!/usr/bin/env python3.10.12
 from argparse import ArgumentParser, BooleanOptionalAction
 from pathlib import Path
 from sys import exit
@@ -29,9 +29,11 @@ def main(
     """
     # region: Pre-flight operations
 
-    BASE_DIRECTORY = Path(__name__).parent
-    REFERENCE_FILE = BASE_DIRECTORY.joinpath("VERSION")
-    MODULE_FILE = BASE_DIRECTORY.joinpath("src/jt_snippets/_version.py")
+    BASE_DIR = Path(__name__).parent.resolve()
+    REFERENCE_FILE = BASE_DIR.joinpath("VERSION")
+
+    MODULE_NAME = BASE_DIR.name.replace("-", "_")
+    MODULE_FILE = BASE_DIR.joinpath("src", MODULE_NAME, "__init__.py")
 
     # endregion: Pre-flight operations
 
@@ -72,9 +74,11 @@ def main(
     confirmed = False
 
     while not confirmed:
-        response = input(f"Upgrade current version: v{text} to v{_version} - Confirm (Y/N): ")
+        response = input(
+            f"Upgrade current version: v{text} to v{_version} - Confirm (Y/N): "
+        )
 
-        if not response.upper() in ["Y", "N"]:
+        if response.upper() not in ["Y", "N"]:
             print(f"Invalid response, try again.\n")
 
             continue
@@ -91,7 +95,6 @@ def main(
 
 
 if __name__ == "__main__":
-
     parser = ArgumentParser(description="Semantic Versioning Utility")
     parser.add_argument(
         "--major",
