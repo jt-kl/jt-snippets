@@ -21,11 +21,7 @@
       "program": "${file}",
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal",
-      "args": [
-        "--minor",
-        "--build",
-        "--prerelease",
-      ],
+      "args": ["--minor", "--build", "--prerelease"],
       "justMyCode": true
     },
     {
@@ -34,7 +30,7 @@
       "request": "launch",
       "module": "pytest",
       "env": {},
-      "args": ["--no-cov", "-vvv", "-s"],
+      "args": ["-vvv", "-s", "--no-cov"],
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal",
       "internalConsoleOptions": "openOnSessionStart",
@@ -48,7 +44,7 @@
       "module": "pytest",
       "env": {},
       //   "args": [],
-      "args": ["--cov-report=term-missing", "--cov=trading_app", "-vvv", "-s"],
+      "args": ["-vvv -s --cov-report=term-missing", "--cov=jt_snippets"],
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal",
       "internalConsoleOptions": "openOnSessionStart",
