@@ -1,37 +1,35 @@
 [build-system]
 build-backend = "setuptools.build_meta"
-requires = ["setuptools>=66.1", "wheel"]
+requires = ["setuptools", "wheel"]
 
 [project]
-authors = [ { name="Jeremy Tan" } ]
+authors = [{ name = "Jeremy Tan" }]
 classifiers = [
     "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.10.6"
+    "Programming Language :: Python :: 3.10.12",
 ]
 description = "JT Code Snippets"
 dynamic = ["version", "dependencies"]
 name = "jt_snippets"
-requires-python = ">3.10.4"
-
+requires-python = ">=3.10.12"
 
 [tool.setuptools.dynamic]
-dependencies = { file=["requirements.txt"] }
+dependencies = { file = ["requirements-prod.txt"] }
 version = { attr = "jt_snippets.VERSION" }
 
-
 [tool.pytest.ini_options]
-addopts = "-vvv --cov-report=term-missing --cov=jt_snippets"
-pythonpath = ["."]
+addopts = "-vvv -s --cov-report=term-missing --cov=jt_snippets"
 testpaths = ["tests"]
 
-[tool.black]
+[tool.ruff]
 line-length = 119
+select = ["F401", "E711", "E713"]
 
 [tool.mypy]
 check_untyped_defs = true
 disallow_any_generics = true
-ignore_missing_imports = true
-mypy_path = "src"
+files = ["src"]
+ignore_missing_imports = false
 no_implicit_optional = true
 no_implicit_reexport = true
 show_error_codes = true
