@@ -23,10 +23,10 @@ jobs:
     runs-on: ["self-hosted", "jthodt"]
     steps:
       - uses: "actions/checkout@v3"
-      - name: "Set Up Python v3.10.6"
+      - name: "Set Up Python v3.10.12"
         uses: "actions/setup-python@v4"
         with:
-          python-version: "3.10.6"
+          python-version: "3.10.12"
       - name: "Pre-Flight Tests"
         id: "pre_flight_tests"
         run: |
