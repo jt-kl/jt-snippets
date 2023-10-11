@@ -38,7 +38,7 @@ jobs:
           echo -e "\nInstall package dependencies started...\n"
 
           pip install wheel flake8 pytest pytest-cov --no-cache-dir
-          if [ -f requirements.txt ]; then pip install -r requirements.txt --no-cache-dir; fi
+          if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt --no-cache-dir; fi
           if [ -d ./redist ]; then pip install ./redist/*; fi
           pip3 install -e .
 
