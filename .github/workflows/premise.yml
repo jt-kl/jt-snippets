@@ -103,10 +103,10 @@ jobs:
     runs-on: ["self-hosted", "jthodt"]
     steps:
       - uses: "actions/checkout@v3"
-      - name: "Set Up Python v3.10.6"
+      - name: "Set Up Python v3.10.12"
         uses: "actions/setup-python@v4"
         with:
-          python-version: "3.10.6"
+          python-version: "3.10.12"
       - name: "Deploy Artifacts"
         id: "deploy_artifacts"
         run: |
@@ -139,10 +139,10 @@ jobs:
     runs-on: ["self-hosted", "jthodt"]
     steps:
       - uses: "actions/checkout@v3"
-      - name: "Set Up Python v3.10.6"
+      - name: "Set Up Python v3.10.12"
         uses: "actions/setup-python@v4"
         with:
-          python-version: "3.10.6"
+          python-version: "3.10.12"
       - name: "Build Environment"
         id: "build_environment"
         run: |
@@ -156,7 +156,6 @@ jobs:
           echo -e "\nCreate Python virtual environment completed."
 
           echo -e "\nInstall package dependencies started...\n"
-          pip3 install wheel --no-cache-dir
           if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt --no-cache-dir; fi
           if [ -d ./redist ]; then pip install ./redist/*; fi
           pip3 install -e .
