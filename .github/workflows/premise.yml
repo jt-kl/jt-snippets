@@ -83,14 +83,14 @@ jobs:
       - name: "Invoke Tests"
         id: "test"
         run: |
-          if [[ ${{ steps.lint_source.outcome }} == "success" ]] 
+          if [[ ${{ steps.install_packages.outcome }} == "success" ]] 
           then
             cd ${{ env.BASE_STAGING_DIRECTORY }}${{ env.REPOSITORY_NAME }}
             echo -e "Current working directory: $(pwd)"
 
             source .env/bin/activate
 
-            pytest -vvv --cov-report=term-missing --cov=${{ env.REPOSITORY_NAME }}
+            pytest -vvv -s --cov-report=term-missing --cov=${{ env.REPOSITORY_NAME }}
             # Manually execute tests locally and generate a coverage badge
             # coverage-badge -o ./tests/coverage.svg
 
