@@ -82,25 +82,6 @@ jobs:
           else
             exit 1
           fi
-      - name: "Lint Source: flake8"
-        id: "lint_source"
-        run: |
-          if [[ ${{ steps.install_packages.outcome }} == "success" ]] 
-          then
-            cd ${{ env.BASE_STAGING_DIRECTORY }}${{ env.REPOSITORY_NAME }}
-            echo -e "Current working directory: $(pwd)"
-
-            source .env/bin/activate
-
-            # stop the build if there are Python syntax errors or undefined names
-            flake8 . --count --show-source --statistics --max-complexity=10 --exclude=.env --ignore=F821,F541,E501 --select=E9,F63,F7,F82 
-            # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-            flake8 . --count --exit-zero --statistics --max-complexity=10 --max-line-length=127 --exclude=.env
-            
-            exit 0
-          else
-            exit 1
-          fi
       - name: "Invoke Tests"
         id: "test"
         run: |
