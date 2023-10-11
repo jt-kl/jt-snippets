@@ -29,7 +29,8 @@ def main(
     """
     # region: Pre-flight operations
 
-    BASE_DIR = Path(__name__).parent.resolve()
+    SCRIPT_DIR = Path(__file__).parent.resolve()
+    BASE_DIR = SCRIPT_DIR.parent.resolve()
     REFERENCE_FILE = BASE_DIR.joinpath("VERSION")
 
     MODULE_NAME = BASE_DIR.name.replace("-", "_")

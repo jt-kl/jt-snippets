@@ -104,7 +104,7 @@ $ pip3 install -e .
 # Build the wheel file and on completion, distribute the wheel file located in
 # the "dist" directory. The "build" and "dist" directory can be safely removed
 
-$ python3 upgrade.py <options>
+$ python3 scripts/upgrade.py <options>
 $ bash build.sh
 
 # Manually execute tests locally and generate a coverage badge and
