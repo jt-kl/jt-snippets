@@ -1,6 +1,7 @@
 ## Testing - Getting Started
 
-![tests](https://github.com/jt-kl/jt-snippets/actions/workflows/hosted.yml/badge.svg)
+![tests](https://github.com/jt-kl/jt-snippets/actions/workflows/hosted_test.yml/badge.svg)
+![tests](https://github.com/jt-kl/jt-snippets/actions/workflows/premise_test.yml/badge.svg)
 ![coverage](./coverage.svg)
 
 ```shell

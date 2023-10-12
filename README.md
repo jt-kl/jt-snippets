@@ -2,7 +2,9 @@
 
 <!-- ![build](https://github.com/jt-kl/jt-snippets/actions/workflows/build.yml/badge.svg) -->
 
-![tests](https://github.com/jt-kl/jt-snippets/actions/workflows/hosted.yml/badge.svg)
+![tests](https://github.com/jt-kl/jt-snippets/actions/workflows/hosted_test.yml/badge.svg)
+![tests](https://github.com/jt-kl/jt-snippets/actions/workflows/premise_test.yml/badge.svg)
+![build](https://github.com/jt-kl/jt-snippets/actions/workflows/premise_build.yml/badge.svg)
 ![coverage](./tests/coverage.svg)
 
 The following project contains helper functions/methods to complement your Python code
