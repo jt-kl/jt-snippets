@@ -23,63 +23,30 @@ The following project contains helper functions/methods to complement your Pytho
 
 Requirements to use the library:
 
-1. Python v3.10.6 or greater
+1. Python v3.10.12 or greater
 2. PIP v22.3.1 or greater
 
-## Development
-
-Clone the repository and setup your environment for development
-
-_Linux (Ubuntu/Debian)_
+## Getting Started
 
 ```shell
 #!/bin/bash
-# Create a Python virtual environment
-
-$ cd snippets
-$ python3 -m venv .env
-$ source .env/bin/activate
-
-# Install library dependencies
-
-$ pip3 install wheel --no-cache-dir
-$ pip3 install -r requirements.txt --no-cache-dir
-$ pip3 install redist/*
-$ pip3 install -e .
-```
-
-## Linting & Testing
-
-```shell
-#!/bin/bash
-# Create a Python virtual environment
-
 $ cd jt-snippets
 $ python3 -m venv .env
 $ source .env/bin/activate
-
-# Install library dependencies
-
+$ python3 -m pip install --upgrade pip
 $ pip3 install wheel --no-cache-dir
-$ pip3 install -r requirements.txt --no-cache-dir
-$ pip3 install redist/*
-$ pip3 install -e .
+$ pip3 install -r requirements-dev.txt --no-cache-dir
+$ pip3 install redist/* # If applicable
+$ pip3 install -e . # Install 'src' as local library
 
-# Execute linting
+```
 
-$ clear; flake8 --count --statistics  --exclude=.env --ignore=F821,F541,E501 --max-complexity=10
+## Testing
 
-# Execute testing
+```shell
+#!/bin/bash
+$ clear; tox # Scripted multi version tests
 
-$ clear; pytest -vvv --cov-report=term-missing --cov=jt-snippets
-
-# Execute multiple version testing
-
-$ clear; tox
-
-# Type checking
-
-$ clear; mypy ./src
 ```
 
 ## Build & Distribute
@@ -88,26 +55,10 @@ Create a redistributable wheel file
 
 ```shell
 #!/bin/bash
-# Create a Python virtual environment
-
-$ cd jt-snippets
-$ python3 -m venv .env
-$ source .env/bin/activate
-
-# Install library dependencies
-
-$ pip3 install wheel --no-cache-dir
-$ pip3 install -r requirements.txt --no-cache-dir
-$ pip3 install redist/*
-$ pip3 install -e .
-
 # Build the wheel file and on completion, distribute the wheel file located in
 # the "dist" directory. The "build" and "dist" directory can be safely removed
 
-$ python3 scripts/upgrade.py <options>
+$ python3 scripts/upgrade.py <options> # Updates package version number
 $ bash build.sh
 
-# Manually execute tests locally and generate a coverage badge and
-# check it into the repository
-$ clear; coverage-badge -o ./tests/coverage.svg
 ```
