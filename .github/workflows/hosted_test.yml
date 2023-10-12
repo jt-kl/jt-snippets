@@ -1,0 +1,68 @@
+name: "tests - Hosted"
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+permissions:
+  contents: "read"
+
+env:
+  BASE_STAGING_DIRECTORY: "/srv/staging/"
+  REPOSITORY_NAME: "jt-snippets"
+
+jobs:
+  test:
+    runs-on: "ubuntu-latest"
+    steps:
+      - uses: "actions/checkout@v4"
+      - name: "Set Up Python v3.10.12"
+        uses: "actions/setup-python@v4"
+        id: "deploy_python"
+        with:
+          python-version: "3.10.12"
+      - name: "Invoke Dependency Installs"
+        id: "install_packages"
+        run: |
+          echo -e "Current working directory: $(pwd)\n"
+          echo -e "--------- Directory Contents ---------\n"
+          ls -la
+          echo -e "\n--------- Directory Contents ---------"
+
+          echo -e "\nInstall package dependencies started...\n"
+
+          pip3 install --upgrade pip
+          if [ -d ./redist ]; then pip3 install ./redist/*; fi
+          if [ -f requirements-dev.txt ]; then pip3 install -r requirements-dev.txt --no-cache-dir; fi          
+          pip3 install -e .
+
+          echo -e "\nInstall package dependencies completed."
+      - name: "Invoke Linting"
+        id: "invoke_linting"
+        run: |
+          if [[ ${{ steps.install_packages.outcome }} -ne "success" ]]
+          then
+            exit 1
+          fi
+
+          echo -e "Lint code started...\n"
+
+          ruff check .
+
+          echo -e "\Lint code completed."
+      - name: "Invoke Tests"
+        id: "invoke_tests"
+        run: |
+          if [[ ${{ steps.invoke_linting.outcome }} -ne "success" ]]
+            then
+              exit 1
+          fi
+
+          echo -e "Test code started...\n"
+
+          pytest
+
+          echo -e "\nTest code completed."

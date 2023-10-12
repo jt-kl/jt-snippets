@@ -1,0 +1,93 @@
+name: "build - Premise"
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+permissions:
+  contents: "read"
+
+env:
+  BASE_STAGING_DIRECTORY: "/srv/staging/"
+  REPOSITORY_NAME: "jt-snippets"
+
+jobs:
+  preflight:
+    runs-on: ["self-hosted"]
+    steps:
+      - uses: "actions/checkout@v4"
+      - name: "Set up Python 3.10.12"
+        uses: "actions/setup-python@v4"
+        id: "deploy_python"
+        with:
+          python-version: "3.10.12"
+      - name: "Deploy Artifacts"
+        id: "deploy_artifacts"
+        run: |
+          cd $GITHUB_WORKSPACE
+          echo -e "Current working directory: $(pwd)\n"
+          echo -e "--------- Directory Contents ---------\n"
+          ls -la
+          echo -e "\n--------- Directory Contents ---------"
+
+          if [ ! -d ${{ env.BASE_STAGING_DIRECTORY }}${{ env.REPOSITORY_NAME }} ]
+          then
+            echo -e -n "\nCreate staging directory started..."
+            mkdir -p ${{ env.BASE_STAGING_DIRECTORY }}${{ env.REPOSITORY_NAME }};
+            echo -e "${{ vars.GreenText}}COMPLETED${{ vars.ResetText }}"
+          else
+            echo -e -n "\nPurging old artifacts..."
+            rm -rf ${{ env.BASE_STAGING_DIRECTORY }}${{ env.REPOSITORY_NAME }}/*
+            echo -e "${{ vars.GreenText}}COMPLETED${{ vars.ResetText }}"
+          fi
+
+          echo -e -n "Copying artifacts..."
+          cp -r $GITHUB_WORKSPACE/* ${{ env.BASE_STAGING_DIRECTORY }}${{ env.REPOSITORY_NAME }}
+          echo -e "${{ vars.GreenText}}COMPLETED${{ vars.ResetText }}"
+      - name: "Invoke Dependency Installs"
+        id: "install_packages"
+        run: |
+          if [[ ${{ steps.deploy_artifacts.outcome }} -ne "success" ]]
+          then
+            exit 1
+          fi
+
+          cd ${{ env.BASE_STAGING_DIRECTORY }}${{ env.REPOSITORY_NAME }}
+          echo -e "Current working directory: $(pwd)"
+
+          echo -e "Create Python virtual environment started...\n"
+
+          python3 -m venv .env
+          source .env/bin/activate
+          python3 -m pip install --upgrade pip
+
+          echo -e "\nCreate Python virtual environment completed."
+
+          echo -e "\nInstall package dependencies started...\n"
+
+          if [ -d ./redist ]; then pip3 install ./redist/*; fi
+          if [ -f requirements-dev.txt ]; then pip3 install -r requirements-dev.txt --no-cache-dir; fi            
+          pip3 install -e .
+
+          echo -e "\nInstall package dependencies completed."
+
+          exit 0
+  build:
+    needs: "preflight"
+    runs-on: ["self-hosted"]
+    steps:
+      - name: "Build Package"
+        id: "build_package"
+        run: |
+          cd ${{ env.BASE_STAGING_DIRECTORY }}${{ env.REPOSITORY_NAME }}
+          echo -e "Current working directory: $(pwd)"
+
+          echo -e "Build Python package started...\n"
+
+          source .env/bin/activate
+          python3 -m build
+
+          echo -e "\nBuild Python package completed."
