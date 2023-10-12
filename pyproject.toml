@@ -22,6 +22,7 @@ addopts = "-vvv -s --cov-report=term-missing --cov=jt_snippets"
 testpaths = ["tests"]
 
 [tool.ruff]
+exclude = [".env"]
 line-length = 119
 select = ["F401", "E711", "E713"]
 
