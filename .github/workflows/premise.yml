@@ -71,7 +71,7 @@ jobs:
             echo -e "\nCreate Python virtual environment completed."
             
             echo -e "\nInstall package dependencies started...\n"
-            if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt --no-cache-dir; fi
+            if [ -f requirements-dev.txt ]; then pip3 install -r requirements-dev.txt --no-cache-dir; fi
             if [ -d ./redist ]; then pip install ./redist/*; fi
             pip3 install -e .
             echo -e "\nInstall package dependencies completed."
@@ -156,7 +156,7 @@ jobs:
           echo -e "\nCreate Python virtual environment completed."
 
           echo -e "\nInstall package dependencies started...\n"
-          if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt --no-cache-dir; fi
+          if [ -f requirements-dev.txt ]; then pip3 install -r requirements-dev.txt --no-cache-dir; fi
           if [ -d ./redist ]; then pip install ./redist/*; fi
           pip3 install -e .
           echo -e "\nInstall package dependencies completed."

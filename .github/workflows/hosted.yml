@@ -1,6 +1,6 @@
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
 
-name: "Hosted Runner (Test)"
+name: "tests - Hosted"
 
 on:
   workflow_dispatch:
@@ -36,7 +36,7 @@ jobs:
 
           echo -e "\nInstall package dependencies started...\n"
 
-          if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt --no-cache-dir; fi
+          if [ -f requirements-dev.txt ]; then pip3 install -r requirements-dev.txt --no-cache-dir; fi
           if [ -d ./redist ]; then pip install ./redist/*; fi
           pip3 install -e .
 
