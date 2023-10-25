@@ -50,7 +50,7 @@ jobs:
       - name: "Invoke Dependency Installs"
         id: "install_packages"
         run: |
-          if [[ ${{ steps.deploy_artifacts }} -ne "success" ]]
+          if [[ ${{ steps.deploy_artifacts.outcome }} -ne "success" ]]
           then
             exit 1
           fi
