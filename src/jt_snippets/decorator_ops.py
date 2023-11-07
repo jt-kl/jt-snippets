@@ -1,6 +1,7 @@
+from collections.abc import Callable
 from functools import wraps
 from time import sleep, time
-from typing import Any, Callable
+from typing import Any
 
 
 def exponential_backoff(

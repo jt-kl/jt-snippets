@@ -1,6 +1,6 @@
-from collections.abc import Iterator
+from collections.abc import Callable, Iterator
 from pathlib import Path
-from typing import Callable, Optional
+from typing import Any, Optional
 from unittest.mock import Mock, mock_open, patch
 
 import pytest
@@ -24,7 +24,7 @@ from jt_snippets.io_ops import (  # validate_is_directory,; validate_is_file,
 def mock_directory(
     exist: bool = True,
     childrens: Iterator = iter(()),
-    side_effect: Optional[Callable] = None,
+    side_effect: Optional[Callable[..., Any]] = None,
 ) -> Mock:
     mock = Mock(spec=Path)
     mock.exists.return_value = exist
@@ -48,7 +48,7 @@ def mock_directories(
 def mock_file(
     exist: bool = True,
     st_size: int = 1024,
-    side_effect: Optional[Callable] = None,
+    side_effect: Optional[Callable[..., Any]] = None,
 ) -> Mock:
     mock = Mock(spec=Path)
     mock.exists.return_value = exist
@@ -177,7 +177,8 @@ validate_file_size_sad = [
         dict(
             exception_type=Exception,
             exception_message=(
-                f"Value of lower bound range cannot be greater " f"than or equal to value of upper bound range"
+                f"Value of lower bound range cannot be greater "
+                f"than or equal to value of upper bound range"
             ),
         ),
     ),
@@ -354,14 +355,18 @@ class TestIOOps:
 
         if text:
             with patch("builtins.open", mock_open(read_data=text)) as mocked_file:
-                with pytest.raises(expect["exception_type"], match=expect["exception_message"]):
+                with pytest.raises(
+                    expect["exception_type"], match=expect["exception_message"]
+                ):
                     generate_file_hash(**payload)
         else:
             with patch("builtins.open", new_callable=mock_open) as mocked_file:
                 mf = mocked_file.return_value
                 mf.read.side_effect = IsADirectoryError
 
-                with pytest.raises(expect["exception_type"], match=expect["exception_message"]):
+                with pytest.raises(
+                    expect["exception_type"], match=expect["exception_message"]
+                ):
                     generate_file_hash(**payload)
 
     @pytest.mark.parametrize("payload, expect", validate_file_hash_happy)
