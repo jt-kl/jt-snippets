@@ -1,71 +1,53 @@
+from datetime import time
 from logging import DEBUG, Formatter, Handler, Logger, StreamHandler, getLogger
-from logging.handlers import RotatingFileHandler, SysLogHandler
+from logging.handlers import (
+    RotatingFileHandler,
+    SysLogHandler,
+    TimedRotatingFileHandler,
+)
 from pathlib import Path
-from sys import stdout
-from typing import Optional, TextIO
+from typing import TextIO
 
 
-def create_console_stream_handler(
-    stream: TextIO = stdout,
+def create_stream_handler(
+    stream: TextIO | None = None,
     level: int = DEBUG,
-    format: Optional[str] = None,
-) -> StreamHandler:  # type: ignore
+    format: str | None = None,
+) -> StreamHandler:
     """
     Creates a console stream handler
 
     Args:
         stream: Logging output stream
         level: Logging level
-        format: Log output format string
+        format: Logging format
     """
-    console_stream_handler = StreamHandler(stream)
-    console_stream_handler.setLevel(level)
+    handler = StreamHandler(stream)
+    handler.setLevel(level)
 
     if format:
-        log_format = Formatter(format)
+        handler.setFormatter(Formatter(format))
     else:
-        log_format = Formatter("%(asctime)s|%(levelname)-8s|%(module)s:%(funcName)s:%(lineno)d - %(message)s")
+        handler.setFormatter(
+            Formatter(
+                (
+                    "%(asctime)s|"
+                    "%(levelname)-8s|"
+                    "%(module)s:"
+                    "%(funcName)s:"
+                    "%(lineno)d - %(message)s"
+                )
+            )
+        )
 
-    console_stream_handler.setFormatter(log_format)
-
-    return console_stream_handler
-
-
-def create_syslog_handler(
-    address: tuple[str, int] = ("localhost", 514),
-    level: int = DEBUG,
-    format: Optional[str] = None,
-    **kwargs,
-) -> SysLogHandler:
-    """
-    Creates a SysLog handler
-
-    Args:
-        address: Hostname and port number of SysLog host
-        level: Logging level
-        format: Log output format string
-    """
-    syslog_handler = SysLogHandler(
-        address,
-        **kwargs,
-    )
-    syslog_handler.setLevel(level)
-
-    if format:
-        log_format = Formatter(format)
-    else:
-        log_format = Formatter("%(asctime)s|%(levelname)-8s|%(module)s:%(funcName)s:%(lineno)d - %(message)s")
-
-    syslog_handler.setFormatter(log_format)
-
-    return syslog_handler
+    return handler
 
 
 def create_rotating_file_handler(
     directory: Path,
     filename: str = "application.log",
     level: int = DEBUG,
-    format: Optional[str] = None,
+    format: str | None = None,
     maximum_file_size: int = 10485760,
     maximum_file_count: int = 10,
     **kwargs,
@@ -74,45 +56,135 @@ def create_rotating_file_handler(
     Creates a rotating file handler
 
     Args:
-        directory: Directory path to store log file
-        filename: Desired log file name
+        directory: Log directory
+        filename: Log file name
         level: Logging level
-        format: Log output format string
+        format: Logging format
         maximum_file_size: Maximum file size before rolling over
         maximum_file_count: Maximum file count before rolling over
     """
-    rotating_file_handler = RotatingFileHandler(
+    handler = RotatingFileHandler(
         directory.joinpath(filename),
         maxBytes=maximum_file_size,
         backupCount=maximum_file_count,
         **kwargs,
     )
-    rotating_file_handler.setLevel(level)
+    handler.setLevel(level)
 
     if format:
-        log_format = Formatter(format)
+        handler.setFormatter(Formatter(format))
     else:
-        log_format = Formatter("%(asctime)s|%(levelname)-8s|%(module)s:%(funcName)s:%(lineno)d - %(message)s")
+        handler.setFormatter(
+            Formatter(
+                (
+                    "%(asctime)s|"
+                    "%(levelname)-8s|"
+                    "%(module)s:"
+                    "%(funcName)s:"
+                    "%(lineno)d - %(message)s"
+                )
+            )
+        )
 
-    rotating_file_handler.setFormatter(log_format)
+    return handler
 
-    return rotating_file_handler
+
+def create_timed_rotating_file_handler(
+    directory: Path,
+    filename: str = "application.log",
+    level: int = DEBUG,
+    format: str | None = None,
+    interval: int = 24,
+    rollover: time = time(0, 0, 0),
+    maximum_file_count: int = 31,
+) -> TimedRotatingFileHandler:
+    """
+    Creates a timed rotating file handler
+
+    Args:
+        directory: Log directory
+        filename: Log file name
+        level: Logging level
+        interval: Log file rollover interval
+        rollover: Log file rollover time
+        format: Logging format
+        maximum_file_count: Maximum file count before rolling over
+    """
+    handler = TimedRotatingFileHandler(
+        directory.joinpath(filename),
+        interval=interval,
+        backupCount=maximum_file_count,
+        atTime=rollover,
+    )
+    handler.setLevel(level)
+
+    if format:
+        handler.setFormatter(Formatter(format))
+    else:
+        handler.setFormatter(
+            Formatter(
+                (
+                    "%(asctime)s|"
+                    "%(levelname)-8s|"
+                    "%(module)s:"
+                    "%(funcName)s:"
+                    "%(lineno)d - %(message)s"
+                )
+            )
+        )
+
+    return handler
+
+
+def create_syslog_handler(
+    address: tuple[str, int] = ("localhost", 514),
+    level: int = DEBUG,
+    format: str | None = None,
+    **kwargs,
+) -> SysLogHandler:
+    """
+    Creates a Syslog handler
+
+    Args:
+        address: Syslog hostname and port number
+        level: Logging level
+        format: Logging format
+    """
+    handler = SysLogHandler(address, **kwargs)
+    handler.setLevel(level)
+
+    if format:
+        handler.setFormatter(Formatter(format))
+    else:
+        handler.setFormatter(
+            Formatter(
+                (
+                    "%(asctime)s|"
+                    "%(levelname)-8s|"
+                    "%(module)s:"
+                    "%(funcName)s:"
+                    "%(lineno)d - %(message)s"
+                )
+            )
+        )
+
+    return handler
 
 
 def create_logger(
-    name: Optional[str] = None,
+    name: str | None = None,
     level: int = DEBUG,
-    format: Optional[str] = None,
-    handlers: list[Handler] = [],
+    format: str | None = None,
+    handlers: list[Handler] = list(),
 ) -> Logger:
     """
-    Create custom application logger
+    Creates a logger
 
     Args:
-        name: Name of logger
+        name: Logger name
         level: Logging level
-        format: Log output format string
-        handlers: Collection of handlers to add to logger
+        format: Logging format
+        handlers: Collection of logging handlers
     """
     logger = getLogger(name)
     logger.setLevel(level)
@@ -121,10 +193,8 @@ def create_logger(
     logger.propagate = False
 
     for handler in handlers:
-        # Override log output format
         if format:
-            log_format = Formatter("%(asctime)s|%(levelname)-8s|%(module)s:%(funcName)s:%(lineno)d - %(message)s")
-            handler.setFormatter(log_format)
+            handler.setFormatter(Formatter(format))
 
         logger.addHandler(handler)
 
