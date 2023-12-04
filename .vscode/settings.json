@@ -15,7 +15,7 @@
     "editor.codeActionsOnSave": {
       "source.organizeImports": true
     },
-    "editor.defaultFormatter": "ms-python.black-formatter"
+    "editor.defaultFormatter": "charliermarsh.ruff"
   },
   "python.analysis.extraPaths": ["tests"],
   "python.defaultInterpreterPath": ".env/bin/python3",
