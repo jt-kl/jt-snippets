@@ -23,7 +23,7 @@ testpaths = ["tests"]
 
 [tool.ruff]
 exclude = [".env"]
-line-length = 119
+# line-length = 119
 select = ["F401", "E711", "E713"]
 
 [tool.mypy]
