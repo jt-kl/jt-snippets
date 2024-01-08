@@ -19,11 +19,11 @@ jobs:
     runs-on: ["self-hosted"]
     steps:
       - uses: "actions/checkout@v4"
-      - name: "Set up Python 3.10.12"
+      - name: "Set up Python 3.11.7"
         uses: "actions/setup-python@v4"
         id: "deploy_python"
         with:
-          python-version: "3.10.12"
+          python-version: "3.11.7"
       - name: "Deploy Artifacts"
         id: "deploy_artifacts"
         run: |
