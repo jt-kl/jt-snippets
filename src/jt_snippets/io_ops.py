@@ -4,7 +4,9 @@ from pathlib import Path
 from typing import Any, Optional
 from zipfile import ZIP_DEFLATED, ZipFile
 
-from jt_snippets import logger
+from jt_snippets.logger_ops import create_logger
+
+logger = create_logger()
 
 # region: Validators
 
@@ -81,7 +83,8 @@ def validate_file_size(
 
     if lower_bound >= upper_bound:
         raise ValueError(
-            f"Value of lower bound range cannot be greater " f"than or equal to value of upper bound range"
+            f"Value of lower bound range cannot be greater "
+            f"than or equal to value of upper bound range"
         )
 
     return lower_bound < path.stat().st_size < upper_bound
